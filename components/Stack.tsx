@@ -1,16 +1,11 @@
 import React from 'react';
-import { Database, Server, Code, Terminal as TermIcon, Shield, Cloud, Zap, Cpu } from 'lucide-react';
 
 const Stack: React.FC = () => {
   const stack = [
-    { name: 'TypeScript', icon: 'devicon-typescript-plain' },
+    { name: 'JavaScript', icon: 'devicon-javascript-plain' },
     { name: 'Node.js', icon: 'devicon-nodejs-plain' },
-    { name: 'Python', icon: 'devicon-python-plain' },
-    { name: 'Go', icon: 'devicon-go-plain' },
-    { name: 'PostgreSQL', icon: 'devicon-postgresql-plain' },
-    { name: 'Redis', icon: 'devicon-redis-plain' },
-    { name: 'Docker', icon: 'devicon-docker-plain' },
-    { name: 'React', icon: 'devicon-react-original' },
+    { name: 'CSS', icon: 'devicon-css3-plain' },
+    { name: 'Tailwind CSS', icon: 'devicon-tailwindcss-original' },
   ];
 
   return (
@@ -18,7 +13,7 @@ const Stack: React.FC = () => {
       <div className="container mx-auto max-w-[65ch] md:max-w-5xl">
         <div className="mb-12 md:mb-16 text-center md:text-left">
           <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter">Technology Stack</h2>
-          <p className="text-white/40 max-w-[65ch] mx-auto md:mx-0 text-xs md:text-sm font-bold uppercase tracking-widest leading-relaxed">Selected instruments for high-performance production environments.</p>
+          <p className="text-white/40 max-w-[65ch] mx-auto md:mx-0 text-xs md:text-sm font-bold uppercase tracking-widest leading-relaxed">Core technologies utilized for daily development.</p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/10 border border-white/10 overflow-hidden rounded-xl">

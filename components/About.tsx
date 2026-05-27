@@ -1,5 +1,5 @@
 import React from 'react';
-import { Database, Cpu, Globe } from 'lucide-react';
+import { Globe, Webhook, Box } from 'lucide-react';
 
 const About: React.FC = () => {
   return (
@@ -17,15 +17,26 @@ const About: React.FC = () => {
             </p>
           </div>
 
-          {/* Skill Card 1 */}
+          {/* Skill Card 1 - Core Competencies */}
           <div className="md:col-span-2 md:row-span-1 bento-card bg-[#050505] flex flex-col justify-between p-6">
-             <div className="flex gap-2">
+             <div className="flex gap-2 mb-4">
+                <div className="w-2 h-2 bg-[#4d924c]/40 rounded-sm"></div>
                 <div className="w-2 h-2 bg-[#4d924c]/40 rounded-sm"></div>
                 <div className="w-2 h-2 bg-[#4d924c]/40 rounded-sm"></div>
              </div>
-             <div>
-                <h3 className="text-xl font-bold mb-2 uppercase tracking-tighter">Automation</h3>
-                <p className="text-white/50 text-xs font-bold uppercase tracking-widest">Logic & Bot Specialist</p>
+             <div className="flex flex-col gap-3">
+                <div>
+                   <h3 className="text-lg font-bold mb-1 uppercase tracking-tighter">Web Developer</h3>
+                   <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1"><Globe size={12}/> Architecture & UI</p>
+                </div>
+                <div>
+                   <h3 className="text-lg font-bold mb-1 uppercase tracking-tighter">API Integration</h3>
+                   <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1"><Webhook size={12}/> Microservices</p>
+                </div>
+                <div>
+                   <h3 className="text-lg font-bold mb-1 uppercase tracking-tighter">Automation</h3>
+                   <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1"><Box size={12}/> Logic & Bots</p>
+                </div>
              </div>
           </div>
 
