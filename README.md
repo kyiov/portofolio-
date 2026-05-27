@@ -1,31 +1,35 @@
-# MUH4RHQ / PORTFOLIO
+# MUH4RHQ
 
-A minimalist, high-performance engineering portfolio showcasing expertise in API development and automation.
+> **Live Deployment:** [www.muh4r.my.id](https://www.muh4r.my.id)
 
----
+Personal portfolio and digital sandbox of an API Engineer & Automation Specialist based in Pontianak, ID. 
 
-### Stack
-- **Core:** React 19, TypeScript, Vite
-- **UI/UX:** HeroUI v3, Tailwind CSS v4, Framer Motion
-- **Icons:** Lucide React
+This repository houses the source code for my frontend architecture. Built to be lightweight, heavily interactive, and designed with a brutalist cyber-aesthetic to reflect my daily environment: the terminal.
 
-### Highlights
-- **Bento Architecture:** Organized modular layout for maximum clarity.
-- **Performance:** Built for speed with optimized asset delivery.
-- **Interactivity:** Fluid animations and responsive design systems.
+## Architecture & Stack
+- **Framework:** React 19 + TypeScript + Vite
+- **Styling:** Tailwind CSS v4 + HeroUI
+- **Motion & Interactions:** Framer Motion, HTML5 Canvas (Matrix Engine), Web Audio API
+- **Live Integrations:** Real-time YouTube Audio Fetching (Nexray API)
 
-### Setup
+## Local Development
+
 ```bash
-# Install
+# Clone the repository
+git clone https://github.com/kyiov/portofolio-.git
+cd portofolio-
+
+# Install dependencies
 npm install
 
-# Develop
+# Start the dev server
 npm run dev
 ```
 
-### Connect
-- [GitHub](https://github.com/kyiov)
-- [WhatsApp](https://wa.me/6282148570591)
+## Contact
+Reach out for backend architecture design, custom bot development, or system automation inquiries.
+- **GitHub:** [@kyiov](https://github.com/kyiov)
+- **WhatsApp:** [+6282148570591](https://wa.me/6282148570591)
 
 ---
-<p align="center">© 2026 MUH4RHQ — Build with Precision.</p>
+*Built from the ground up to support O(1) aesthetic performance.*
