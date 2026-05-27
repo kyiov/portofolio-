@@ -19,7 +19,7 @@ const Contact: React.FC = () => {
                   <MessageCircle size={18} />
                   WhatsApp
                </a>
-               <a href="https://github.com/Har404-err" target="_blank" className="flex items-center gap-2 px-6 py-3 border border-black/10 rounded-full font-bold hover:bg-black/5 transition-colors">
+               <a href="https://github.com/kyiov" target="_blank" className="flex items-center gap-2 px-6 py-3 border border-black/10 rounded-full font-bold hover:bg-black/5 transition-colors">
                   <Code2 size={18} />
                   GitHub
                </a>

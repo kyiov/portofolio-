@@ -117,3 +117,5 @@ public
 # Lock files (Optional - Remove if you want to lock versions)
 yarn.lock
 pnpm-lock.yaml
+PRD_UIUX_UPDATE.md
+metadata.json

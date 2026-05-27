@@ -24,7 +24,7 @@ npm run dev
 ```
 
 ### Connect
-- [GitHub](https://github.com/Har404-err)
+- [GitHub](https://github.com/kyiov)
 - [WhatsApp](https://wa.me/6282148570591)
 
 ---

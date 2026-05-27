@@ -82,7 +82,7 @@ const MusicPlayer: React.FC = () => {
     setLoading(true);
 
     try {
-        const res = await fetch(`https://api.nexray.web.id/downloader/ytplay?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`https://api.nexray.eu.cc/downloader/ytplay?q=${encodeURIComponent(query)}`);
         const data = await res.json();
         
         if (data.status && data.result) {

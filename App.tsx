@@ -31,7 +31,7 @@ const App: React.FC = () => {
            </p>
 
            <div className="flex gap-8">
-              <a href="https://github.com/Har404-err" target="_blank" className="text-white/40 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">Github</a>
+              <a href="https://github.com/kyiov" target="_blank" className="text-white/40 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">Github</a>
               <a href="https://wa.me/6282148570591" target="_blank" className="text-white/40 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">WhatsApp</a>
            </div>
         </div>
