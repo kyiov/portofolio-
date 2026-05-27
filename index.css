@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
 @theme {
-  --font-geist: "Geist", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
   --font-inter: "Inter", sans-serif;
   
   --color-primary: #ffffff;
   --color-secondary: #0070f3;
   --color-background: #000000;
   --color-muted: #888888;
-  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border: rgba(255, 255, 255, 0.15);
 }
 
 @layer base {
   body {
     @apply bg-background text-white antialiased cursor-none;
     font-family: var(--font-mono);
+    line-height: 1.6;
   }
 
   /* Prevent default cursor on interactive elements since we have a custom cursor */
   a, button, input, [role="button"] {
     @apply cursor-none;
   }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+
+  /* Focus visibility for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-[#4d924c] ring-offset-2 ring-offset-black rounded-sm;
+  }
+}
+
+.bento-card {
+  @apply relative overflow-hidden bg-[#050505] border border-border rounded-xl p-6 md:p-8 transition-all duration-250 ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bento-card:hover {
+    @apply border-white/20 shadow-2xl;
+    transform: translateY(-4px);
+  }
+}
+
+.glass-navbar {
+  @apply bg-black/70 backdrop-blur-xl border-b border-white/10;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40;
+}
+
+.btn-shiny {
+  @apply relative inline-flex items-center justify-center px-8 py-3 font-bold text-black transition-all duration-200 bg-white hover:bg-white/90 rounded-lg;
 }
 
 @keyframes slide {
@@ -29,12 +62,12 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
+  animation: fadeIn 0.4s ease-out forwards;
 }
 
 @keyframes glitch {
@@ -52,18 +85,20 @@
   text-shadow: 2px 2px 0px rgba(0,255,255,0.5), -2px -2px 0px rgba(255,0,0,0.5);
 }
 
-.bento-card {
-  @apply relative overflow-hidden bg-[#0a0a0a] border border-border rounded-[2rem] p-8 transition-all duration-500 hover:border-white/20;
-}
-
-.glass-navbar {
-  @apply bg-black/50 backdrop-blur-md border-b border-white/5;
-}
-
-.text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40;
-}
-
-.btn-shiny {
-  @apply relative inline-flex items-center justify-center px-8 py-3 font-bold text-black transition-all duration-200 bg-white rounded-full hover:bg-white/90;
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .glitch-hover:hover {
+    animation: none !important;
+    transform: none !important;
+    text-shadow: none !important;
+  }
+  .bento-card:hover {
+    transform: none !important;
+  }
 }

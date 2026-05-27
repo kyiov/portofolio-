@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Search, Loader2, Activity } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, ChevronDown, Music } from 'lucide-react';
 
 interface Track {
   title: string;
@@ -11,49 +10,18 @@ interface Track {
 
 const MusicPlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
-  const [query, setQuery] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [audioLoading, setAudioLoading] = useState(false);
-  const [analyserActive, setAnalyserActive] = useState(false);
-  
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
 
-  const [track, setTrack] = useState<Track>({
-    title: "back to friends",
-    artist: "sombr",
-    src: "/audio/default.mp3",
-    image: "https://i.ytimg.com/vi/c8zq4kAn_O0/hq720.jpg"
-  });
-
-  const initAudioContext = () => {
-    if (!audioContextRef.current && audioRef.current) {
-      try {
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-        audioContextRef.current = new AudioContext();
-        analyserRef.current = audioContextRef.current.createAnalyser();
-        analyserRef.current.fftSize = 64;
-        
-        sourceRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
-        sourceRef.current.connect(analyserRef.current);
-        analyserRef.current.connect(audioContextRef.current.destination);
-        setAnalyserActive(true);
-      } catch (e) {
-        console.warn("Web Audio API not supported or blocked by CORS:", e);
-      }
-    }
+  const track: Track = {
+    title: "Evaluasi",
+    artist: "Hindia",
+    src: "https://api.yt2mp3.lol/api/download/ebc5edc295584e54", // Fallback URL or initial URL from prompt
+    image: "https://i.ytimg.com/vi/cWrSjCZ5AeE/hq720.jpg"
   };
 
   useEffect(() => {
-    if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = "";
-    }
-
     const audio = new Audio();
     audio.crossOrigin = "anonymous";
     audio.src = track.src;
@@ -61,207 +29,119 @@ const MusicPlayer: React.FC = () => {
     audio.volume = 0.5;
     audioRef.current = audio;
 
-    // Reset audio context source if track changes
-    if (audioContextRef.current && analyserRef.current) {
-        try {
-            sourceRef.current?.disconnect();
-            sourceRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
-            sourceRef.current.connect(analyserRef.current);
-        } catch (e) {
-            console.warn("Could not reconnect audio source:", e);
-        }
-    }
-
-    const handleCanPlay = () => {
-        setAudioLoading(false);
-        if (isPlaying) {
-            audio.play().catch(e => {
-                console.warn("Autoplay blocked:", e);
-                setIsPlaying(false);
-            });
-        }
+    const handleTimeUpdate = () => {
+      if (audio.duration) {
+        setProgress((audio.currentTime / audio.duration) * 100);
+      }
     };
 
-    const handleLoadStart = () => setAudioLoading(true);
-    const handleError = (e: any) => {
-        console.error("Audio Error:", e);
-        setAudioLoading(false);
+    const handleEnded = () => setIsPlaying(false);
+    const handleError = () => {
+        // Fallback or retry logic if needed
         setIsPlaying(false);
     };
 
-    audio.addEventListener('canplay', handleCanPlay);
-    audio.addEventListener('loadstart', handleLoadStart);
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('ended', handleEnded);
     audio.addEventListener('error', handleError);
 
+    // Initial fetch to get fresh URL if the hardcoded one is expired
+    fetch(`https://api.nexray.eu.cc/downloader/ytplay?q=Evaluasi+`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status && data.result) {
+            audio.src = data.result.download_url;
+        }
+      })
+      .catch(console.error);
+
     return () => {
-        audio.pause();
-        audio.removeEventListener('canplay', handleCanPlay);
-        audio.removeEventListener('loadstart', handleLoadStart);
-        audio.removeEventListener('error', handleError);
+      audio.pause();
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('error', handleError);
     };
-  }, [track.src]);
+  }, []);
 
   useEffect(() => {
-      if (!audioRef.current) return;
-      if (isPlaying) {
-          if (audioContextRef.current?.state === 'suspended') {
-              audioContextRef.current.resume();
-          }
-          audioRef.current.play().then(() => {
-              if (!analyserActive) initAudioContext();
-          }).catch(() => setIsPlaying(false));
-      } else {
-          audioRef.current.pause();
-      }
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.play().catch(() => setIsPlaying(false));
+    } else {
+      audioRef.current.pause();
+    }
   }, [isPlaying]);
-
-  // Audio Visualizer Draw Loop
-  useEffect(() => {
-    if (!canvasRef.current) return;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId: number;
-
-    const renderFrame = () => {
-      animationFrameId = requestAnimationFrame(renderFrame);
-      
-      const width = canvas.width;
-      const height = canvas.height;
-      
-      ctx.clearRect(0, 0, width, height);
-
-      if (analyserRef.current && isPlaying) {
-        const bufferLength = analyserRef.current.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        analyserRef.current.getByteFrequencyData(dataArray);
-
-        const barWidth = (width / bufferLength) * 2.5;
-        let barHeight;
-        let x = 0;
-
-        for (let i = 0; i < bufferLength; i++) {
-          barHeight = (dataArray[i] / 255) * height;
-
-          ctx.fillStyle = '#4d924c'; // Grass Green
-          ctx.fillRect(x, height - barHeight, barWidth, barHeight);
-
-          x += barWidth + 1;
-        }
-      } else if (isPlaying && !analyserActive) {
-        // Simulated visualizer fallback if CORS blocks Web Audio API
-        const bars = 16;
-        const barWidth = width / bars - 1;
-        let x = 0;
-        for (let i = 0; i < bars; i++) {
-            const barHeight = Math.random() * height * 0.8 + height * 0.2;
-            ctx.fillStyle = '#4d924c';
-            ctx.fillRect(x, height - barHeight, barWidth, barHeight);
-            x += barWidth + 1;
-        }
-      } else {
-        // Flat line when paused
-        ctx.fillStyle = 'rgba(255,255,255,0.2)';
-        ctx.fillRect(0, height / 2, width, 1);
-      }
-    };
-
-    renderFrame();
-
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [isPlaying, analyserActive]);
 
   const togglePlay = () => setIsPlaying(!isPlaying);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query) return;
-    setLoading(true);
-
-    try {
-        const res = await fetch(`https://api.nexray.eu.cc/downloader/ytplay?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        
-        if (data.status && data.result) {
-            const item = data.result;
-            setTrack({
-                title: item.title.replace(/\(Official Video\)|Lyrics|Official Audio/gi, '').substring(0, 30),
-                artist: item.channel,
-                src: item.download_url, 
-                image: item.thumbnail
-            });
-            setIsPlaying(true);
-            setShowSearch(false);
-            setQuery('');
-        }
-    } catch (err) {
-        console.error("Search Error", err);
-    } finally {
-        setLoading(false);
-    }
-  };
+  if (isCollapsed) {
+    return (
+      <button 
+        onClick={() => setIsCollapsed(false)}
+        className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-black/80 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-2xl z-50 hover:bg-black transition-colors focus-visible:ring-2 focus-visible:ring-[#4d924c]"
+        aria-label="Expand music player"
+      >
+        <Music size={20} className={isPlaying ? "text-[#4d924c] animate-pulse" : "text-white"} aria-hidden="true" />
+      </button>
+    );
+  }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
-      <AnimatePresence>
-        {showSearch && (
-            <motion.div 
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                className="bg-black border border-white/20 w-72 p-4 backdrop-blur-xl"
-            >
-                <form onSubmit={handleSearch} className="flex gap-2">
-                    <input 
-                        type="text"
-                        placeholder="Search track..." 
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        className="bg-white/5 text-[#4d924c] font-vt323 text-lg p-2 flex-grow border border-white/10 outline-none focus:border-[#4d924c]"
-                    />
-                    <button 
-                        type="submit" 
-                        disabled={loading}
-                        className="bg-white text-black font-bold px-3 py-2 hover:bg-white/80 transition-colors"
-                    >
-                        {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <Search className="w-4 h-4" />}
-                    </button>
-                </form>
-            </motion.div>
-        )}
-      </AnimatePresence>
-
-      <motion.div
-        layout
-        className="bg-black/90 backdrop-blur-xl border border-white/20 flex items-center p-3 gap-4 shadow-2xl"
-      >
-        <button
-            className="w-10 h-10 flex-shrink-0 bg-white border border-transparent flex items-center justify-center hover:bg-white/80 transition-colors text-black"
-            onClick={togglePlay}
-        >
-            {audioLoading ? (
-                <Loader2 className="animate-spin w-5 h-5" />
-            ) : isPlaying ? (
-                <Pause fill="currentColor" size={18} />
-            ) : (
-                <Play fill="currentColor" size={18} className="ml-1" />
-            )}
-        </button>
-
-        <div className="flex flex-col justify-center w-24 md:w-32">
-            <span className="text-[10px] font-bold uppercase text-[#4d924c] truncate tracking-wider">{track.title}</span>
-            <span className="text-[9px] text-white/40 truncate mt-0.5 uppercase tracking-widest">{track.artist}</span>
-            <canvas ref={canvasRef} width="120" height="20" className="mt-2 w-full h-[15px] opacity-80"></canvas>
+    <div className="fixed bottom-6 right-6 w-full max-w-[300px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50 flex flex-col transition-all duration-300">
+      
+      {/* Main Row */}
+      <div className="flex items-center p-3 gap-3">
+        {/* Thumbnail */}
+        <div className="w-[44px] h-[44px] flex-shrink-0 rounded-md overflow-hidden bg-white/5">
+          <img 
+            src={track.image} 
+            alt={`Album art for ${track.title} by ${track.artist}`} 
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
         </div>
 
-        <button
-            className={`w-8 h-8 flex-shrink-0 flex items-center justify-center border border-transparent hover:border-white/20 transition-all ${showSearch ? 'text-[#4d924c]' : 'text-white/30'}`}
-            onClick={() => setShowSearch(!showSearch)}
+        {/* Info */}
+        <div className="flex flex-col justify-center flex-1 min-w-0">
+            <span className="text-[11px] font-bold text-white truncate leading-tight" title={track.title}>{track.title}</span>
+            <span className="text-[10px] text-white/50 truncate uppercase tracking-widest mt-0.5" title={track.artist}>{track.artist}</span>
+        </div>
+
+        {/* Controls */}
+        <div className="flex items-center gap-1">
+            <button aria-label="Previous track" className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white transition-colors rounded-full focus-visible:ring-2 focus-visible:ring-[#4d924c]">
+                <SkipBack size={14} fill="currentColor" />
+            </button>
+            <button 
+                onClick={togglePlay}
+                aria-label={isPlaying ? "Pause music" : "Play music"}
+                className="w-8 h-8 flex items-center justify-center text-white hover:text-[#4d924c] transition-colors rounded-full focus-visible:ring-2 focus-visible:ring-[#4d924c]"
+            >
+                {isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" className="ml-0.5" />}
+            </button>
+            <button aria-label="Next track" className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white transition-colors rounded-full focus-visible:ring-2 focus-visible:ring-[#4d924c]">
+                <SkipForward size={14} fill="currentColor" />
+            </button>
+        </div>
+
+        {/* Collapse Button */}
+        <button 
+            onClick={() => setIsCollapsed(true)}
+            aria-label="Minimize music player"
+            className="w-6 h-full flex items-center justify-center border-l border-white/5 pl-2 ml-1 text-white/30 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-[#4d924c]"
         >
-            <Search size={14} />
+            <ChevronDown size={16} />
         </button>
-      </motion.div>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="h-1 w-full bg-white/5" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Audio progress">
+        <div 
+            className="h-full bg-[#4d924c] transition-all duration-100 ease-linear"
+            style={{ width: `${progress}%` }}
+        ></div>
+      </div>
+      
     </div>
   );
 };
