@@ -9,23 +9,23 @@ const Stack: React.FC = () => {
   ];
 
   return (
-    <section id="stack" className="py-16 md:py-24 px-4 md:px-6 bg-black scroll-mt-24">
+    <section id="stack" className="py-16 md:py-24 px-4 md:px-6 bg-white scroll-mt-24 border-b-thick border-black">
       <div className="container mx-auto max-w-[65ch] md:max-w-5xl">
         <div className="mb-12 md:mb-16 text-center md:text-left">
-          <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter">Technology Stack</h2>
-          <p className="text-white/40 max-w-[65ch] mx-auto md:mx-0 text-xs md:text-sm font-bold uppercase tracking-widest leading-relaxed">Core technologies utilized for daily development.</p>
+          <h2 className="text-4xl font-archivo mb-4 uppercase">Technology Stack</h2>
+          <p className="text-black/60 max-w-[65ch] mx-auto md:mx-0 text-xs md:text-sm font-archivo uppercase tracking-widest leading-relaxed">Core technologies utilized for daily development.</p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/10 border border-white/10 overflow-hidden rounded-xl">
+        <div className="grid grid-cols-2 sm:grid-cols-4 bg-black border-thick border-black gap-[3px]">
           {stack.map((item) => (
             <div 
               key={item.name}
-              className="bg-[#050505] p-8 md:p-12 flex flex-col items-center justify-center group hover:bg-white/[0.03] transition-all duration-300 focus-within:bg-white/[0.03]"
+              className="bg-white p-8 md:p-12 flex flex-col items-center justify-center group hover:bg-black transition-all cursor-pointer"
               tabIndex={0}
               aria-label={`Technology: ${item.name}`}
             >
-              <i className={`${item.icon} text-4xl md:text-5xl mb-4 md:mb-6 grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-focus:grayscale-0 group-focus:opacity-100 transition-all duration-300`} aria-hidden="true"></i>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-white group-focus:text-white transition-colors text-center">{item.name}</span>
+              <i className={`${item.icon} text-4xl md:text-5xl mb-4 md:mb-6 grayscale opacity-60 group-hover:invert group-hover:opacity-100 transition-all`} aria-hidden="true"></i>
+              <span className="text-[10px] font-archivo uppercase tracking-[0.2em] text-black group-hover:text-white transition-colors text-center">{item.name}</span>
             </div>
           ))}
         </div>

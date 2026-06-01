@@ -11,18 +11,22 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        pixel: ['"Press Start 2P"', "cursive"],
-        vt323: ['"VT323"', "monospace"],
+        archivo: ["Archivo Black", "sans-serif"],
+        work: ["Work Sans", "sans-serif"],
+        mono: ["Space Mono", "monospace"],
       },
       colors: {
-        mc: {
-          diamond: '#4dedf4',
-          obsidian: '#110b11',
-          stone: '#7d7d7d',
-          dirt: '#866043',
-          grass: '#4d924c',
-          wood: '#5d4037',
-        }
+        black: "#000000",
+        white: "#FFFFFF",
+        blue: "#0000FF",
+        success: "#008000",
+        warning: "#FFA500",
+        error: "#FF0000",
+      },
+      borderWidth: {
+        thin: "1px",
+        thick: "3px",
+        heavy: "5px",
       }
     },
   },
@@ -35,25 +39,25 @@ export default {
         large: "0px",
       },
       borderWidth: {
-        small: "2px",
-        medium: "4px",
-        large: "6px",
+        small: "1px",
+        medium: "3px",
+        large: "5px",
       }
     },
     themes: {
-      dark: {
+      light: {
         colors: {
+          background: "#FFFFFF",
+          foreground: "#000000",
           primary: {
-            DEFAULT: "#4d924c", // Grass
-            foreground: "#ffffff",
+            DEFAULT: "#000000",
+            foreground: "#FFFFFF",
           },
           secondary: {
-            DEFAULT: "#4dedf4", // Diamond
+            DEFAULT: "#FFFFFF",
             foreground: "#000000",
           },
-          background: "#110b11",
-          content1: "#c6c6c6", // Stone light for cards
-          content2: "#866043", // Dirt
+          focus: "#000000",
         },
       },
     },

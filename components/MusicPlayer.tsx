@@ -17,7 +17,7 @@ const MusicPlayer: React.FC = () => {
   const track: Track = {
     title: "Evaluasi",
     artist: "Hindia",
-    src: "https://api.yt2mp3.lol/api/download/ebc5edc295584e54", // Fallback URL or initial URL from prompt
+    src: "https://api.yt2mp3.lol/api/download/ebc5edc295584e54", 
     image: "https://i.ytimg.com/vi/cWrSjCZ5AeE/hq720.jpg"
   };
 
@@ -37,7 +37,6 @@ const MusicPlayer: React.FC = () => {
 
     const handleEnded = () => setIsPlaying(false);
     const handleError = () => {
-        // Fallback or retry logic if needed
         setIsPlaying(false);
     };
 
@@ -45,7 +44,6 @@ const MusicPlayer: React.FC = () => {
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('error', handleError);
 
-    // Initial fetch to get fresh URL if the hardcoded one is expired
     fetch(`https://api.nexray.eu.cc/downloader/ytplay?q=Evaluasi+`)
       .then(res => res.json())
       .then(data => {
@@ -78,21 +76,21 @@ const MusicPlayer: React.FC = () => {
     return (
       <button 
         onClick={() => setIsCollapsed(false)}
-        className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-black/80 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-2xl z-50 hover:bg-black transition-colors focus-visible:ring-2 focus-visible:ring-[#4d924c]"
+        className="fixed bottom-6 right-6 w-12 h-12 bg-black border-thick border-black flex items-center justify-center z-50 hover:bg-white text-white hover:text-black transition-colors"
         aria-label="Expand music player"
       >
-        <Music size={20} className={isPlaying ? "text-[#4d924c] animate-pulse" : "text-white"} aria-hidden="true" />
+        <Music size={20} className={isPlaying ? "animate-pulse" : ""} aria-hidden="true" />
       </button>
     );
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-full max-w-[300px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50 flex flex-col transition-all duration-300">
+    <div className="fixed bottom-6 right-6 w-full max-w-[300px] bg-white border-thick border-black overflow-hidden z-50 flex flex-col transition-all">
       
       {/* Main Row */}
       <div className="flex items-center p-3 gap-3">
         {/* Thumbnail */}
-        <div className="w-[44px] h-[44px] flex-shrink-0 rounded-md overflow-hidden bg-white/5">
+        <div className="w-[44px] h-[44px] flex-shrink-0 border-thin border-black overflow-hidden bg-black/5">
           <img 
             src={track.image} 
             alt={`Album art for ${track.title} by ${track.artist}`} 
@@ -103,23 +101,23 @@ const MusicPlayer: React.FC = () => {
 
         {/* Info */}
         <div className="flex flex-col justify-center flex-1 min-w-0">
-            <span className="text-[11px] font-bold text-white truncate leading-tight" title={track.title}>{track.title}</span>
-            <span className="text-[10px] text-white/50 truncate uppercase tracking-widest mt-0.5" title={track.artist}>{track.artist}</span>
+            <span className="text-[11px] font-archivo text-black truncate leading-tight uppercase" title={track.title}>{track.title}</span>
+            <span className="text-[10px] text-black/60 truncate uppercase font-archivo tracking-widest mt-0.5" title={track.artist}>{track.artist}</span>
         </div>
 
         {/* Controls */}
         <div className="flex items-center gap-1">
-            <button aria-label="Previous track" className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white transition-colors rounded-full focus-visible:ring-2 focus-visible:ring-[#4d924c]">
+            <button aria-label="Previous track" className="w-8 h-8 flex items-center justify-center text-black/40 hover:text-black transition-colors">
                 <SkipBack size={14} fill="currentColor" />
             </button>
             <button 
                 onClick={togglePlay}
                 aria-label={isPlaying ? "Pause music" : "Play music"}
-                className="w-8 h-8 flex items-center justify-center text-white hover:text-[#4d924c] transition-colors rounded-full focus-visible:ring-2 focus-visible:ring-[#4d924c]"
+                className="w-8 h-8 flex items-center justify-center text-black hover:text-blue transition-colors"
             >
                 {isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" className="ml-0.5" />}
             </button>
-            <button aria-label="Next track" className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white transition-colors rounded-full focus-visible:ring-2 focus-visible:ring-[#4d924c]">
+            <button aria-label="Next track" className="w-8 h-8 flex items-center justify-center text-black/40 hover:text-black transition-colors">
                 <SkipForward size={14} fill="currentColor" />
             </button>
         </div>
@@ -128,16 +126,16 @@ const MusicPlayer: React.FC = () => {
         <button 
             onClick={() => setIsCollapsed(true)}
             aria-label="Minimize music player"
-            className="w-6 h-full flex items-center justify-center border-l border-white/5 pl-2 ml-1 text-white/30 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-[#4d924c]"
+            className="w-6 h-full flex items-center justify-center border-l-thin border-black pl-2 ml-1 text-black/40 hover:text-black transition-colors"
         >
             <ChevronDown size={16} />
         </button>
       </div>
 
       {/* Progress Bar */}
-      <div className="h-1 w-full bg-white/5" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Audio progress">
+      <div className="h-1.5 w-full bg-black/10" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Audio progress">
         <div 
-            className="h-full bg-[#4d924c] transition-all duration-100 ease-linear"
+            className="h-full bg-black transition-all duration-100 ease-linear"
             style={{ width: `${progress}%` }}
         ></div>
       </div>

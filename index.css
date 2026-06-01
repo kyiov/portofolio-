@@ -1,104 +1,114 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;600&family=Space+Mono&display=swap');
 
 @theme {
-  --font-mono: "JetBrains Mono", monospace;
-  --font-inter: "Inter", sans-serif;
+  --font-archivo: "Archivo Black", sans-serif;
+  --font-work: "Work Sans", sans-serif;
+  --font-mono: "Space Mono", monospace;
   
-  --color-primary: #ffffff;
-  --color-secondary: #0070f3;
-  --color-background: #000000;
-  --color-muted: #888888;
-  --color-border: rgba(255, 255, 255, 0.15);
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+  --color-blue: #0000FF;
+  --color-success: #008000;
+  --color-warning: #FFA500;
+  --color-error: #FF0000;
+  
+  --color-background: var(--color-white);
+  --color-foreground: var(--color-black);
+  
+  --border-width-thin: 1px;
+  --border-width-thick: 3px;
+  --border-width-heavy: 5px;
+
+  --radius-none: 0px;
 }
 
 @layer base {
-  body {
-    @apply bg-background text-white antialiased cursor-none;
-    font-family: var(--font-mono);
-    line-height: 1.6;
+  * {
+    @apply border-black;
   }
 
-  /* Prevent default cursor on interactive elements since we have a custom cursor */
-  a, button, input, [role="button"] {
-    @apply cursor-none;
+  body {
+    @apply bg-white text-black antialiased;
+    font-family: var(--font-work);
+    line-height: 1.6;
+    cursor: default;
   }
+
+  /* Force 0px radius everywhere */
+  *, ::before, ::after {
+    border-radius: 0px !important;
+  }
+
+  h1, h2, h3 {
+    @apply font-archivo uppercase leading-none;
+  }
+
+  h1 { @apply text-[64px]; }
+  h2 { @apply text-[48px]; }
+  h3 { @apply text-[32px]; }
+  h4 { @apply font-work font-semibold text-[22px] leading-tight; }
+
+  p { @apply text-[16px]; }
   
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
+  small { @apply text-[14px]; }
+  
+  code, pre {
+    font-family: var(--font-mono);
+    @apply text-[15px];
+  }
+
+  a {
+    @apply text-blue hover:underline;
   }
 
   /* Focus visibility for accessibility */
   *:focus-visible {
-    @apply outline-none ring-2 ring-[#4d924c] ring-offset-2 ring-offset-black rounded-sm;
+    @apply outline-none ring-offset-2 ring-2 ring-black;
   }
 }
 
-.bento-card {
-  @apply relative overflow-hidden bg-[#050505] border border-border rounded-xl p-6 md:p-8 transition-all duration-250 ease-out;
+/* RawBlock Utility Components */
+
+.btn-primary {
+  @apply bg-black text-white border-thick border-black px-6 py-2.5 uppercase font-archivo text-[14px] tracking-[2px] inline-flex items-center justify-center transition-all;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .bento-card:hover {
-    @apply border-white/20 shadow-2xl;
-    transform: translateY(-4px);
-  }
+.btn-primary:hover {
+  @apply bg-white text-black;
 }
 
-.glass-navbar {
-  @apply bg-black/70 backdrop-blur-xl border-b border-white/10;
+.btn-primary:active {
+  @apply border-heavy;
 }
 
-.text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40;
+.btn-secondary {
+  @apply bg-white text-black border-thick border-black px-6 py-2.5 uppercase font-archivo text-[14px] tracking-[2px] inline-flex items-center justify-center transition-all;
 }
 
-.btn-shiny {
-  @apply relative inline-flex items-center justify-center px-8 py-3 font-bold text-black transition-all duration-200 bg-white hover:bg-white/90 rounded-lg;
+.btn-secondary:hover {
+  @apply bg-black text-white;
 }
 
-@keyframes slide {
-  0% { transform: translateX(0); opacity: 1; }
-  100% { transform: translateX(300%); opacity: 0; }
+.card-raw {
+  @apply bg-white border-thick border-black p-6;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.card-elevated {
+  @apply bg-white border-heavy border-black p-6;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+.input-raw {
+  @apply bg-[#F0F0F0] text-black border-thick border-black p-2.5 font-mono text-[15px] focus:border-heavy focus:outline-none;
 }
 
-@keyframes glitch {
-  0% { transform: translate(0) }
-  20% { transform: translate(-2px, 2px) }
-  40% { transform: translate(-2px, -2px) }
-  60% { transform: translate(2px, 2px) }
-  80% { transform: translate(2px, -2px) }
-  100% { transform: translate(0) }
+.label-raw {
+  @apply font-archivo text-[14px] uppercase mb-1 block;
 }
 
-.glitch-hover:hover {
-  animation: glitch 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
-  color: #4d924c;
-  text-shadow: 2px 2px 0px rgba(0,255,255,0.5), -2px -2px 0px rgba(255,0,0,0.5);
-}
-
-/* Reduced Motion Preference */
-@media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  .glitch-hover:hover {
-    animation: none !important;
-    transform: none !important;
-    text-shadow: none !important;
-  }
-  .bento-card:hover {
-    transform: none !important;
-  }
+/* Decorative grid background for sections if needed */
+.grid-bg {
+  background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.05;
 }
