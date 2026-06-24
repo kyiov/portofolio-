@@ -58,11 +58,11 @@ const Hero: React.FC = () => {
         className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center text-center py-20"
       >
         <motion.div variants={itemVariants} className="mb-6 flex items-center gap-4">
-          <span className="w-8 md:w-16 h-px bg-[#d4ff00]/50"></span>
-          <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[1em] text-[#d4ff00]">
+          <span className="w-8 md:w-16 h-px bg-accent/50"></span>
+          <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[1em] text-accent">
             EST. MMXXV
           </span>
-          <span className="w-8 md:w-16 h-px bg-[#d4ff00]/50"></span>
+          <span className="w-8 md:w-16 h-px bg-accent/50"></span>
         </motion.div>
 
         <motion.div style={{ y: yText }} className="relative reveal-text w-full">
@@ -79,7 +79,7 @@ const Hero: React.FC = () => {
           className="mt-12 md:mt-20 max-w-3xl px-4"
         >
           <p className="text-xl md:text-3xl lg:text-4xl text-white/90 font-light tracking-tight leading-snug">
-            <span className="text-[#d4ff00] font-black italic">High-Performance API Engineer</span> & <span className="text-white font-black italic underline decoration-[#d4ff00] underline-offset-[12px]">Automation Specialist</span>.
+            <span className="text-accent font-black italic">High-Performance API Engineer</span> & <span className="text-white font-black italic underline decoration-accent underline-offset-[12px]">Automation Specialist</span>.
           </p>
         </motion.div>
 
@@ -91,8 +91,8 @@ const Hero: React.FC = () => {
             href="#contact" 
             className="interactive group relative px-10 py-5 overflow-hidden rounded-full transition-all block"
           >
-            <div className="absolute inset-0 bg-[#d4ff00] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
-            <div className="absolute inset-0 border border-white/20 rounded-full group-hover:border-[#d4ff00] transition-colors"></div>
+            <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+            <div className="absolute inset-0 border border-white/20 rounded-full group-hover:border-accent transition-colors"></div>
             <span className="relative z-10 text-white group-hover:text-black font-jakarta font-black uppercase text-[10px] md:text-xs tracking-[0.3em] flex items-center gap-4 transition-colors">
               Start a Project <span className="text-xl transform group-hover:translate-x-2 transition-transform">→</span>
             </span>

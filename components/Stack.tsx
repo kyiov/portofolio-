@@ -26,7 +26,7 @@ const Stack: React.FC = () => {
       <div className="container mx-auto px-6 lg:px-20 mb-20 md:mb-32 flex flex-col md:flex-row md:items-end justify-between gap-10">
         <div className="w-full">
             <h2 className="font-jakarta text-6xl md:text-8xl lg:text-[10rem] font-black uppercase tracking-tighter leading-none text-white">
-              CORE <br/> <span className="text-[#d4ff00]">STACK</span>
+              CORE <br/> <span className="text-accent">STACK</span>
             </h2>
         </div>
         <div className="max-w-xs md:text-right">
@@ -47,11 +47,11 @@ const Stack: React.FC = () => {
               key={`${item.name}-${idx}`}
               className="group flex items-center gap-6 md:gap-8 interactive"
             >
-              <i className={`${item.icon} text-5xl md:text-9xl text-white opacity-10 group-hover:opacity-100 group-hover:text-[#d4ff00] group-hover:scale-110 transition-all duration-700`}></i>
+              <i className={`${item.icon} text-5xl md:text-9xl text-white opacity-10 group-hover:opacity-100 group-hover:text-accent group-hover:scale-110 transition-all duration-700`}></i>
               <span className="font-jakarta text-3xl md:text-8xl font-black uppercase text-white/5 group-hover:text-white transition-colors">
                 {item.name}
               </span>
-              <span className="text-[#d4ff00] text-2xl md:text-4xl opacity-10">✦</span>
+              <span className="text-accent text-2xl md:text-4xl opacity-10">✦</span>
             </div>
           ))}
         </motion.div>
@@ -69,11 +69,11 @@ const Stack: React.FC = () => {
               key={`${item.name}-${idx}`}
               className="group flex items-center gap-6 md:gap-8 interactive"
             >
-              <i className={`${item.icon} text-5xl md:text-9xl text-white opacity-10 group-hover:opacity-100 group-hover:text-[#d4ff00] group-hover:scale-110 transition-all duration-700`}></i>
+              <i className={`${item.icon} text-5xl md:text-9xl text-white opacity-10 group-hover:opacity-100 group-hover:text-accent group-hover:scale-110 transition-all duration-700`}></i>
               <span className="font-jakarta text-3xl md:text-8xl font-black uppercase text-white/5 group-hover:text-white transition-colors">
                 {item.name}
               </span>
-              <span className="text-[#d4ff00] text-2xl md:text-4xl opacity-10">/</span>
+              <span className="text-accent text-2xl md:text-4xl opacity-10">/</span>
             </div>
           ))}
         </motion.div>
@@ -81,17 +81,17 @@ const Stack: React.FC = () => {
 
       <div className="mt-24 md:mt-40 container mx-auto px-6 lg:px-20 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
         <div className="md:col-span-2">
-            <span className="text-[10px] md:text-[11px] uppercase font-black tracking-[0.4em] md:tracking-[0.6em] text-[#d4ff00] mb-4 md:mb-6 block">The Philosophy</span>
+            <span className="text-[10px] md:text-[11px] uppercase font-black tracking-[0.4em] md:tracking-[0.6em] text-accent mb-4 md:mb-6 block">The Philosophy</span>
             <p className="text-2xl md:text-3xl font-light text-white leading-tight">
                 I don't just write code; I engineer <span className="font-black italic">scalable ecosystems</span> designed to handle real-world complexity.
             </p>
         </div>
-        <div className="p-8 bg-white/5 rounded-2xl flex flex-col justify-between border border-white/5 group hover:border-[#d4ff00]/30 transition-all min-h-[140px]">
-            <span className="text-3xl md:text-4xl font-black text-white group-hover:text-[#d4ff00]">99.9%</span>
+        <div className="p-8 bg-white/5 rounded-2xl flex flex-col justify-between border border-white/5 group hover:border-accent/30 transition-all min-h-[140px]">
+            <span className="text-3xl md:text-4xl font-black text-white group-hover:text-accent">99.9%</span>
             <span className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest text-white/40">Uptime Focus</span>
         </div>
-        <div className="p-8 bg-white/5 rounded-2xl flex flex-col justify-between border border-white/5 group hover:border-[#d4ff00]/30 transition-all min-h-[140px]">
-            <span className="text-3xl md:text-4xl font-black text-white group-hover:text-[#d4ff00]">50ms</span>
+        <div className="p-8 bg-white/5 rounded-2xl flex flex-col justify-between border border-white/5 group hover:border-accent/30 transition-all min-h-[140px]">
+            <span className="text-3xl md:text-4xl font-black text-white group-hover:text-accent">50ms</span>
             <span className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest text-white/40">Response Goal</span>
         </div>
       </div>

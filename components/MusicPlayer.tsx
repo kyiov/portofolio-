@@ -85,22 +85,15 @@ const MusicPlayer: React.FC = () => {
     setLoading(true);
 
     try {
-        const res = await fetch(`https://api.nexray.web.id/downloader/ytplay?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`https://api.kyio.web.id/api/dl/yt-play?q=${encodeURIComponent(query)}`);
         const data = await res.json();
         
-        if (data.status && data.result) {
-            const item = data.result;
-            // Gunakan Proxy Vercel agar tidak kena CORS
-            // const proxyUrl = `/api/proxy?url=${encodeURIComponent(item.download_url)}`;
-            
-            // Untuk dev local tanpa proxy serverless, kita coba direct link dulu
-            // Jika nanti di Vercel error, aktifkan baris proxy di atas
-            
+        if (data.status === "success" && data.download && data.download.downloadURL) {
             setTrack({
-                title: item.title.replace(/\(Official Video\)|Lyrics|Official Audio/gi, '').substring(0, 30),
-                artist: item.channel,
-                src: item.download_url, 
-                image: item.thumbnail
+                title: (data.song?.name || data.download.title).replace(/\(Official Video\)|Lyrics|Official Audio/gi, '').substring(0, 30),
+                artist: data.song?.artist?.name || "Unknown",
+                src: data.download.downloadURL, 
+                image: data.song?.thumbnails?.[data.song.thumbnails.length - 1]?.url || data.song?.thumbnails?.[0]?.url || ""
             });
             setIsPlaying(true);
             setShowSearch(false);
@@ -130,11 +123,11 @@ const MusicPlayer: React.FC = () => {
                     <input 
                         type="text" 
                         placeholder="Cari lagu..." 
-                        className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white w-full focus:border-[#d4ff00] focus:outline-none"
+                        className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white w-full focus:border-accent focus:outline-none"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                     />
-                    <button type="submit" disabled={loading} className="bg-[#d4ff00] text-black rounded-lg px-3 py-2 text-xs font-bold">
+                    <button type="submit" disabled={loading} className="bg-accent text-black rounded-lg px-3 py-2 text-xs font-bold">
                         {loading ? '...' : 'GO'}
                     </button>
                 </form>
@@ -145,7 +138,7 @@ const MusicPlayer: React.FC = () => {
       <motion.div
         layout
         className={`bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/10 rounded-full flex items-center overflow-hidden transition-all duration-500 pr-2`}
-        style={{ boxShadow: isPlaying ? '0 0 20px rgba(212, 255, 0, 0.2)' : 'none' }}
+        style={{ boxShadow: isPlaying ? '0 0 20px accent-glow' : 'none' }}
       >
         <button
           onClick={togglePlay}
@@ -158,9 +151,9 @@ const MusicPlayer: React.FC = () => {
             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             className={`absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-40 transition-opacity ${!isPlaying && 'grayscale'}`}
           />
-          <div className="relative z-10 text-[#d4ff00] drop-shadow-md">
+          <div className="relative z-10 text-accent drop-shadow-md">
             {audioLoading ? (
-               <svg className="animate-spin h-5 w-5 text-[#d4ff00]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+               <svg className="animate-spin h-5 w-5 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
             ) : isPlaying ? (
                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
             ) : (
@@ -170,13 +163,13 @@ const MusicPlayer: React.FC = () => {
         </button>
 
         <div className="flex flex-col justify-center whitespace-nowrap ml-3 mr-2 overflow-hidden w-24 md:w-32">
-            <span className="text-[10px] font-black uppercase text-[#d4ff00] tracking-wider truncate block w-full">{track.title}</span>
+            <span className="text-[10px] font-black uppercase text-accent tracking-wider truncate block w-full">{track.title}</span>
             <span className="text-[9px] text-white/50 font-mono truncate block w-full">{track.artist}</span>
         </div>
 
         <button 
             onClick={() => setShowSearch(!showSearch)}
-            className={`p-2 rounded-full hover:bg-white/10 transition-colors ${showSearch ? 'text-[#d4ff00]' : 'text-white/50'}`}
+            className={`p-2 rounded-full hover:bg-white/10 transition-colors ${showSearch ? 'text-accent' : 'text-white/50'}`}
         >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         </button>

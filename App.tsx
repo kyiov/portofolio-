@@ -76,9 +76,9 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen selection:bg-[#d4ff00] selection:text-black bg-[#050505]">
+    <div className="relative min-h-screen selection:bg-accent selection:text-black bg-[#050505]">
       <motion.div 
-        className="fixed top-0 left-0 right-0 h-[4px] bg-[#d4ff00] z-[100] origin-left shadow-[0_0_15px_rgba(212,255,0,0.5)]"
+        className="fixed top-0 left-0 right-0 h-[4px] bg-accent z-[100] origin-left shadow-[0_0_15px_accent-glow]"
         style={{ scaleX }}
       />
       
@@ -101,19 +101,19 @@ const App: React.FC = () => {
            </div>
            
            <div className="flex flex-col gap-6">
-              <span className="text-[10px] uppercase font-black tracking-widest text-[#d4ff00]">Navigation</span>
+              <span className="text-[10px] uppercase font-black tracking-widest text-accent">Navigation</span>
               <nav className="flex flex-col gap-3 font-bold uppercase text-sm">
-                 <a href="#about" className="hover:text-[#d4ff00] transition-colors interactive">About</a>
-                 <a href="#stack" className="hover:text-[#d4ff00] transition-colors interactive">Stack</a>
-                 <a href="#contact" className="hover:text-[#d4ff00] transition-colors interactive">Contact</a>
+                 <a href="#about" className="hover:text-accent transition-colors interactive">About</a>
+                 <a href="#stack" className="hover:text-accent transition-colors interactive">Stack</a>
+                 <a href="#contact" className="hover:text-accent transition-colors interactive">Contact</a>
               </nav>
            </div>
 
            <div className="flex flex-col gap-6 md:items-end">
-              <span className="text-[10px] uppercase font-black tracking-widest text-[#d4ff00]">Connect</span>
+              <span className="text-[10px] uppercase font-black tracking-widest text-accent">Connect</span>
               <div className="flex gap-6">
-                 <a href="https://github.com/Har404-err" target="_blank" className="font-bold text-white hover:text-[#d4ff00] transition-colors interactive uppercase">Github</a>
-                 <a href="https://wa.me/6282148570591" target="_blank" className="font-bold text-white hover:text-[#d4ff00] transition-colors interactive uppercase">Whatsapp</a>
+                 <a href="https://github.com/Har404-err" target="_blank" className="font-bold text-white hover:text-accent transition-colors interactive uppercase">Github</a>
+                 <a href="https://wa.me/6282148570591" target="_blank" className="font-bold text-white hover:text-accent transition-colors interactive uppercase">Whatsapp</a>
               </div>
            </div>
         </div>
