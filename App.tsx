@@ -6,7 +6,7 @@ import Stack from './components/Stack';
 import Contact from './components/Contact';
 import Navbar from './components/Navbar';
 import MusicPlayer from './components/MusicPlayer';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 
 const App: React.FC = () => {
   const { scrollYProgress } = useScroll();
