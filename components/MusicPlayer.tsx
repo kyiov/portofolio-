@@ -13,14 +13,31 @@ const MusicPlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [audioLoading, setAudioLoading] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Lagu Default dihapus, sekarang mulai dengan null
-  const [track, setTrack] = useState<Track | null>(null);
+  // Inisialisasi track dari localStorage jika ada
+  const [track, setTrack] = useState<Track | null>(() => {
+    try {
+      const saved = localStorage.getItem('musicPlayerTrack');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  // Simpan track ke localStorage setiap kali berubah
+  useEffect(() => {
+    if (track) {
+      localStorage.setItem('musicPlayerTrack', JSON.stringify(track));
+    } else {
+      localStorage.removeItem('musicPlayerTrack');
+    }
+  }, [track]);
 
   useEffect(() => {
     if (!track) return;
@@ -77,6 +94,7 @@ const MusicPlayer: React.FC = () => {
   const togglePlay = () => {
     if (!track) {
       setShowSearch(true);
+      setTimeout(() => searchInputRef.current?.focus(), 100);
       return;
     }
     setIsPlaying(!isPlaying);
@@ -124,13 +142,15 @@ const MusicPlayer: React.FC = () => {
             >
                 <form onSubmit={handleSearch} className="flex gap-2">
                     <input 
+                        ref={searchInputRef}
                         type="text" 
+                        aria-label="Cari lagu di YouTube"
                         placeholder="Cari lagu..." 
                         className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white w-full focus:border-accent focus:outline-none"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                     />
-                    <button type="submit" disabled={loading} className="bg-accent text-black rounded-lg px-3 py-2 text-xs font-bold">
+                    <button type="submit" disabled={loading} aria-label="Cari" className="bg-accent text-black rounded-lg px-3 py-2 text-xs font-bold">
                         {loading ? '...' : 'GO'}
                     </button>
                 </form>
@@ -145,6 +165,7 @@ const MusicPlayer: React.FC = () => {
       >
         <button
           onClick={togglePlay}
+          aria-label={!track ? "Pilih lagu" : isPlaying ? "Pause lagu" : "Putar lagu"}
           className="relative w-12 h-12 flex-shrink-0 flex items-center justify-center group overflow-hidden rounded-full"
         >
           <motion.img 
@@ -171,7 +192,12 @@ const MusicPlayer: React.FC = () => {
         </div>
 
         <button 
-            onClick={() => setShowSearch(!showSearch)}
+            onClick={() => {
+               setShowSearch(!showSearch);
+               if (!showSearch) setTimeout(() => searchInputRef.current?.focus(), 100);
+            }}
+            aria-label="Toggle pencarian lagu"
+            aria-expanded={showSearch}
             className={`p-2 rounded-full hover:bg-white/10 transition-colors ${showSearch ? 'text-accent' : 'text-white/50'}`}
         >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
