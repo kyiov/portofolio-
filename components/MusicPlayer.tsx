@@ -19,15 +19,12 @@ const MusicPlayer: React.FC = () => {
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Lagu Default (sombr - back to friends)
-  const [track, setTrack] = useState<Track>({
-    title: "back to friends",
-    artist: "sombr",
-    src: "https://st2.ezsrv.net/download?sig=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlUGF0aCI6Ii4vZmlsZXMvMjAyNS81LzIwLzE4LzU0L2M0ZDA3M2Q2OTA3YWQwY2E1MzcyNDM4MC5tcDMiLCJ0aXRsZSI6InNvbWJyIC0gYmFjayB0byBmcmllbmRzIChvZmZpY2lhbCB2aWRlbykubXAzIiwiaWF0IjoxNzY5OTQzNzI4LCJleHAiOjE3NzAwMzAxMjh9.i-9htddmGsmo7b50Rc8Vihj02PsJmNxuqfqK4mfH6ZQ?download",
-    image: "https://i.ytimg.com/vi/c8zq4kAn_O0/hq720.jpg"
-  });
+  // Lagu Default dihapus, sekarang mulai dengan null
+  const [track, setTrack] = useState<Track | null>(null);
 
   useEffect(() => {
+    if (!track) return;
+
     if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = "";
@@ -66,7 +63,7 @@ const MusicPlayer: React.FC = () => {
         audio.removeEventListener('loadstart', handleLoadStart);
         audio.removeEventListener('error', handleError);
     };
-  }, [track.src]);
+  }, [track?.src]);
 
   useEffect(() => {
       if (!audioRef.current) return;
@@ -77,7 +74,13 @@ const MusicPlayer: React.FC = () => {
       }
   }, [isPlaying]);
 
-  const togglePlay = () => setIsPlaying(!isPlaying);
+  const togglePlay = () => {
+    if (!track) {
+      setShowSearch(true);
+      return;
+    }
+    setIsPlaying(!isPlaying);
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,7 +148,7 @@ const MusicPlayer: React.FC = () => {
           className="relative w-12 h-12 flex-shrink-0 flex items-center justify-center group overflow-hidden rounded-full"
         >
           <motion.img 
-            src={track.image} 
+            src={track?.image || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop'} 
             alt="Art"
             animate={{ rotate: isPlaying ? 360 : 0 }}
             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -163,8 +166,8 @@ const MusicPlayer: React.FC = () => {
         </button>
 
         <div className="flex flex-col justify-center whitespace-nowrap ml-3 mr-2 overflow-hidden w-24 md:w-32">
-            <span className="text-[10px] font-black uppercase text-accent tracking-wider truncate block w-full">{track.title}</span>
-            <span className="text-[9px] text-white/50 font-mono truncate block w-full">{track.artist}</span>
+            <span className="text-[10px] font-black uppercase text-accent tracking-wider truncate block w-full">{track ? track.title : "No Track"}</span>
+            <span className="text-[9px] text-white/50 font-mono truncate block w-full">{track ? track.artist : "Search to play"}</span>
         </div>
 
         <button 
