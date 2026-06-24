@@ -20,14 +20,20 @@ const MusicPlayer: React.FC = () => {
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Inisialisasi track dari localStorage jika ada
+  // Inisialisasi track dari localStorage atau gunakan lagu default Black Beatles
   const [track, setTrack] = useState<Track | null>(() => {
     try {
       const saved = localStorage.getItem('musicPlayerTrack');
-      return saved ? JSON.parse(saved) : null;
+      if (saved) return JSON.parse(saved);
     } catch (e) {
-      return null;
+      console.warn("Failed to parse cached track");
     }
+    return {
+      title: "Black Beatles",
+      artist: "Rae Sremmurd feat. Gucci Mane",
+      src: "/audio/black-beatles.mp3",
+      image: "/audio/black-beatles.jpg"
+    };
   });
 
   // Simpan track ke localStorage setiap kali berubah

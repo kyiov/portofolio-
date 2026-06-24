@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Hero from './components/Hero';
 import About from './components/About';
 import Stack from './components/Stack';
@@ -15,6 +15,16 @@ const App: React.FC = () => {
     damping: 30,
     restDelta: 0.001
   });
+  
+  const [isSiteLoading, setIsSiteLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulasi loading screen singkat
+    const timer = setTimeout(() => {
+      setIsSiteLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const dot = document.getElementById('custom-cursor');
@@ -77,6 +87,33 @@ const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen selection:bg-accent selection:text-black bg-[#050505]">
+      <AnimatePresence>
+        {isSiteLoading && (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-[999] bg-[#050505] flex items-center justify-center flex-col gap-6"
+          >
+            <motion.div 
+               animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+               className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center shadow-[0_0_30px_rgba(0,242,254,0.3)]"
+            >
+               <div className="w-8 h-8 rounded-full bg-accent animate-pulse shadow-[0_0_20px_rgba(0,242,254,0.6)]"></div>
+            </motion.div>
+            <motion.div
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.2 }}
+               className="font-space font-black tracking-[0.3em] text-accent uppercase text-sm"
+            >
+              INITIALIZING
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div 
         className="fixed top-0 left-0 right-0 h-[4px] bg-accent z-[100] origin-left shadow-[0_0_15px_accent-glow]"
         style={{ scaleX }}
