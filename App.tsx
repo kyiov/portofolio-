@@ -99,43 +99,38 @@ const App: React.FC = () => {
       <AnimatePresence>
         {isSiteLoading && (
           <motion.div 
-            key="terminal-loading"
+            key="3d-cube-loading"
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, y: -50, filter: "blur(10px)" }}
+            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-[999] bg-[#050505] flex items-center justify-center font-mono"
+            className="fixed inset-0 z-[999] bg-[#050505] flex items-center justify-center font-space"
           >
-            <div className="w-full max-w-md px-8 flex flex-col gap-4">
-               <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="text-accent text-xs md:text-sm tracking-widest font-bold flex justify-between"
-               >
-                  <span>MUH4RHQ_OS v2.0.4</span>
-                  <span>{progress >= 100 ? 'OK' : 'BOOTING'}</span>
-               </motion.div>
-               
-               {/* Progress Bar Container */}
-               <div className="h-[2px] w-full bg-white/10 relative overflow-hidden">
-                  <motion.div 
-                    className="absolute top-0 left-0 bottom-0 bg-accent shadow-[0_0_15px_rgba(0,242,254,0.8)]"
-                    initial={{ width: "0%" }}
-                    animate={{ width: `${progress}%` }}
-                    transition={{ ease: "circOut", duration: 0.2 }}
-                  />
-               </div>
-
-               <div className="flex justify-between items-center text-[10px] text-white/50 tracking-[0.2em] uppercase">
-                  <div className="flex flex-col gap-1">
-                    <span>{progress < 30 ? 'Loading core modules...' : progress < 70 ? 'Establishing connection...' : 'Initializing UI...'}</span>
-                    <span className="text-accent/50">[{progress}%]</span>
-                  </div>
-                  <motion.div
-                    animate={{ opacity: [1, 0, 1] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                    className="w-2 h-3 bg-accent"
-                  />
-               </div>
+            <div className="flex flex-col items-center gap-8">
+                {/* 3D Cube */}
+                <div className="cube-wrapper">
+                    <div className="cube">
+                        <div className="cube-face front"></div>
+                        <div className="cube-face back"></div>
+                        <div className="cube-face right"></div>
+                        <div className="cube-face left"></div>
+                        <div className="cube-face top"></div>
+                        <div className="cube-face bottom"></div>
+                    </div>
+                </div>
+                
+                {/* Loading Text */}
+                <div className="flex flex-col items-center gap-2">
+                    <motion.div 
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        className="text-accent text-sm tracking-[0.3em] font-bold uppercase"
+                    >
+                        INITIALIZING
+                    </motion.div>
+                    <div className="text-[10px] text-white/50 tracking-[0.2em]">
+                        [{progress}%]
+                    </div>
+                </div>
             </div>
           </motion.div>
         )}

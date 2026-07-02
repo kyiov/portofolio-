@@ -170,6 +170,41 @@
             -webkit-text-fill-color: transparent;
             color: transparent;
         }
+
+        /* 3D Cube Loader */
+        .cube-wrapper {
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .cube {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            transform-style: preserve-3d;
+            animation: rotateCube 4s infinite linear;
+        }
+        .cube-face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 2px solid #00f2fe;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4), inset 0 0 15px rgba(0, 242, 254, 0.2);
+            background: rgba(0, 242, 254, 0.05);
+        }
+        .cube-face.front  { transform: rotateY(0deg) translateZ(30px); }
+        .cube-face.back   { transform: rotateY(180deg) translateZ(30px); }
+        .cube-face.right  { transform: rotateY(90deg) translateZ(30px); }
+        .cube-face.left   { transform: rotateY(-90deg) translateZ(30px); }
+        .cube-face.top    { transform: rotateX(90deg) translateZ(30px); }
+        .cube-face.bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+        @keyframes rotateCube {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
 </style>
 <link rel="stylesheet" href="/index.css">
 
@@ -197,20 +232,27 @@
     <div id="custom-cursor"></div>
     <div id="cursor-follower"></div>
     <div id="root">
-        <!-- Static Pre-loader to prevent blank flash -->
-        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background-color: #050505; display: flex; align-items: center; justify-content: center; font-family: monospace; flex-direction: column; width: 100%; height: 100vh;">
-            <div style="width: 100%; max-width: 28rem; padding: 0 2rem; display: flex; flex-direction: column; gap: 1rem;">
-                <div style="color: #00f2fe; font-size: 0.875rem; letter-spacing: 0.1em; font-weight: bold; display: flex; justify-content: space-between;">
-                    <span>MUH4RHQ_OS v2.0.4</span>
-                    <span>BOOTING</span>
+        <!-- Static Pre-loader for 3D Cube -->
+        <div style="position: fixed; inset: 0; z-index: 9999; background-color: #050505; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem;">
+                <!-- 3D Cube -->
+                <div class="cube-wrapper">
+                    <div class="cube">
+                        <div class="cube-face front"></div>
+                        <div class="cube-face back"></div>
+                        <div class="cube-face right"></div>
+                        <div class="cube-face left"></div>
+                        <div class="cube-face top"></div>
+                        <div class="cube-face bottom"></div>
+                    </div>
                 </div>
-                <div style="height: 2px; width: 100%; background: rgba(255,255,255,0.1); position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: 0; left: 0; bottom: 0; background: #00f2fe; width: 5%; box-shadow: 0 0 15px rgba(0,242,254,0.8);"></div>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 0.2em; text-transform: uppercase;">
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <span>Loading core modules...</span>
-                        <span style="color: rgba(0,242,254,0.5);">[0%]</span>
+                <!-- Loading Text -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    <div style="color: #00f2fe; font-size: 0.875rem; letter-spacing: 0.3em; font-weight: bold; text-transform: uppercase;">
+                        INITIALIZING
+                    </div>
+                    <div style="font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 0.2em;">
+                        [0%]
                     </div>
                 </div>
             </div>
