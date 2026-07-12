@@ -5,8 +5,17 @@ interface MLoaderProps {
   progress: number;
 }
 
-// Loader inisial brand "M" — SVG stroke yang menggambar dirinya sendiri
+// Loader inisial brand "M" — 3 elemen terpisah (pilar kiri, chevron tengah,
+// pilar kanan) yang stroke-nya menggambar diri sendiri secara stagger,
 // dengan gradient + glow neon (cyan -> violet). Tanpa dependency 3D.
+const M_SEGMENTS = [
+  'M15 85 L15 15',        // pilar kiri
+  'M15 15 L50 58 L85 15', // chevron tengah
+  'M85 15 L85 85',        // pilar kanan
+];
+
+const CYCLE = 2.8; // durasi satu siklus animasi (detik)
+
 const MLoader: React.FC<MLoaderProps> = ({ progress }) => {
   return (
     <div className="relative flex items-center justify-center">
@@ -34,31 +43,38 @@ const MLoader: React.FC<MLoaderProps> = ({ progress }) => {
           </linearGradient>
         </defs>
 
-        {/* Jejak M redup sebagai latar */}
-        <path
-          d="M15 85 L15 15 L50 58 L85 15 L85 85"
-          stroke="rgba(255,255,255,0.07)"
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        {/* Jejak tiap segmen redup sebagai latar */}
+        {M_SEGMENTS.map((d, i) => (
+          <path
+            key={`ghost-${i}`}
+            d={d}
+            stroke="rgba(255,255,255,0.07)"
+            strokeWidth="6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ))}
 
-        {/* M yang menggambar dirinya berulang */}
-        <motion.path
-          d="M15 85 L15 15 L50 58 L85 15 L85 85"
-          stroke="url(#m-grad)"
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0, opacity: 0.4 }}
-          animate={{ pathLength: [0, 1, 1, 0], opacity: [0.4, 1, 1, 0.4] }}
-          transition={{
-            duration: 2.6,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            times: [0, 0.5, 0.75, 1],
-          }}
-        />
+        {/* Tiap segmen menggambar dirinya bergiliran (stagger) */}
+        {M_SEGMENTS.map((d, i) => (
+          <motion.path
+            key={`draw-${i}`}
+            d={d}
+            stroke="url(#m-grad)"
+            strokeWidth="6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={{ pathLength: 0, opacity: 0.4 }}
+            animate={{ pathLength: [0, 1, 1, 0], opacity: [0.4, 1, 1, 0.4] }}
+            transition={{
+              duration: CYCLE,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              times: [0, 0.5, 0.75, 1],
+              delay: i * 0.22,
+            }}
+          />
+        ))}
       </svg>
     </div>
   );
