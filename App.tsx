@@ -6,6 +6,7 @@ import Stack from './components/Stack';
 import Contact from './components/Contact';
 import Navbar from './components/Navbar';
 import MusicPlayer from './components/MusicPlayer';
+import Loader3D from './components/Loader3D';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 
 const App: React.FC = () => {
@@ -103,24 +104,15 @@ const App: React.FC = () => {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-[999] bg-[#050505] flex items-center justify-center font-space"
+            className="fixed inset-0 z-[999] bg-[#050505] flex items-center justify-center font-space overflow-hidden"
           >
-            <div className="flex flex-col items-center gap-8">
-                {/* 3D Cube */}
-                <div className="cube-wrapper">
-                    <div className="cube">
-                        <div className="cube-face front"></div>
-                        <div className="cube-face back"></div>
-                        <div className="cube-face right"></div>
-                        <div className="cube-face left"></div>
-                        <div className="cube-face top"></div>
-                        <div className="cube-face bottom"></div>
-                    </div>
-                </div>
-                
-                {/* Loading Text */}
+            {/* Canvas 3D Three.js (icosahedron + partikel + bloom) */}
+            <Loader3D progress={progress} />
+
+            {/* Overlay Teks */}
+            <div className="relative z-10 flex flex-col items-center gap-4 pointer-events-none">
                 <div className="flex flex-col items-center gap-2">
-                    <motion.div 
+                    <motion.div
                         animate={{ opacity: [0.5, 1, 0.5] }}
                         transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                         className="text-accent text-sm tracking-[0.3em] font-bold uppercase"
@@ -129,6 +121,14 @@ const App: React.FC = () => {
                     </motion.div>
                     <div className="text-[10px] text-white/50 tracking-[0.2em]">
                         [{progress}%]
+                    </div>
+                    {/* Progress bar neon */}
+                    <div className="mt-3 w-40 h-[2px] bg-white/10 overflow-hidden rounded-full">
+                        <motion.div
+                            className="h-full bg-accent"
+                            style={{ width: `${progress}%` }}
+                            transition={{ ease: "easeOut" }}
+                        />
                     </div>
                 </div>
             </div>

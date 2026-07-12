@@ -205,6 +205,16 @@
             0% { transform: rotateX(0deg) rotateY(0deg); }
             100% { transform: rotateX(360deg) rotateY(360deg); }
         }
+
+        /* Static pre-loader (sebelum React mount) */
+        @keyframes preloadPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        @keyframes preloadBar {
+            0%   { transform: translateX(-120%); }
+            100% { transform: translateX(400%); }
+        }
 </style>
 <link rel="stylesheet" href="/index.css">
 
@@ -232,28 +242,14 @@
     <div id="custom-cursor"></div>
     <div id="cursor-follower"></div>
     <div id="root">
-        <!-- Static Pre-loader for 3D Cube -->
+        <!-- Static Pre-loader (tampil sebelum React + Three.js mount) -->
         <div style="position: fixed; inset: 0; z-index: 9999; background-color: #050505; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif;">
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem;">
-                <!-- 3D Cube -->
-                <div class="cube-wrapper">
-                    <div class="cube">
-                        <div class="cube-face front"></div>
-                        <div class="cube-face back"></div>
-                        <div class="cube-face right"></div>
-                        <div class="cube-face left"></div>
-                        <div class="cube-face top"></div>
-                        <div class="cube-face bottom"></div>
-                    </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+                <div style="color: #00f2fe; font-size: 0.875rem; letter-spacing: 0.3em; font-weight: bold; text-transform: uppercase; animation: preloadPulse 1.5s ease-in-out infinite;">
+                    INITIALIZING
                 </div>
-                <!-- Loading Text -->
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-                    <div style="color: #00f2fe; font-size: 0.875rem; letter-spacing: 0.3em; font-weight: bold; text-transform: uppercase;">
-                        INITIALIZING
-                    </div>
-                    <div style="font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 0.2em;">
-                        [0%]
-                    </div>
+                <div style="width: 10rem; height: 2px; background: rgba(255,255,255,0.1); border-radius: 9999px; overflow: hidden;">
+                    <div style="height: 100%; width: 35%; background: #00f2fe; box-shadow: 0 0 10px #00f2fe; animation: preloadBar 1.2s ease-in-out infinite;"></div>
                 </div>
             </div>
         </div>
