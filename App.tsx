@@ -6,7 +6,7 @@ import Stack from './components/Stack';
 import Contact from './components/Contact';
 import Navbar from './components/Navbar';
 import MusicPlayer from './components/MusicPlayer';
-import Loader3D from './components/Loader3D';
+import MLoader from './components/MLoader';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 
 const App: React.FC = () => {
@@ -99,18 +99,18 @@ const App: React.FC = () => {
     <div className="relative min-h-screen selection:bg-accent selection:text-black bg-[#050505]">
       <AnimatePresence>
         {isSiteLoading && (
-          <motion.div 
-            key="3d-cube-loading"
+          <motion.div
+            key="m-loading"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
             className="fixed inset-0 z-[999] bg-[#050505] flex items-center justify-center font-space overflow-hidden"
           >
-            {/* Canvas 3D Three.js (icosahedron + partikel + bloom) */}
-            <Loader3D progress={progress} />
+            <div className="flex flex-col items-center gap-6">
+                {/* Loader huruf M */}
+                <MLoader progress={progress} />
 
-            {/* Overlay Teks */}
-            <div className="relative z-10 flex flex-col items-center gap-4 pointer-events-none">
+                {/* Teks + progress */}
                 <div className="flex flex-col items-center gap-2">
                     <motion.div
                         animate={{ opacity: [0.5, 1, 0.5] }}
