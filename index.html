@@ -171,6 +171,48 @@
             color: transparent;
         }
 
+        /* Loader kubus (Uiverse by Juanes200122, direkolor neon) */
+        @keyframes loader-bounce {
+            0%, 100% { translate: 0px 36px; }
+            50% { translate: 0px 46px; }
+        }
+        @keyframes loader-bounce2 {
+            0%, 100% { translate: 0px 46px; }
+            50% { translate: 0px 56px; }
+        }
+        @keyframes loader-umbral {
+            0% { stop-color: #00f2fe2e; }
+            50% { stop-color: rgba(0, 242, 254, 0.52); }
+            100% { stop-color: #00f2fe2e; }
+        }
+        @keyframes loader-umbral2 {
+            0% { stop-color: #8b5cf62e; }
+            50% { stop-color: rgba(139, 92, 246, 0.52); }
+            100% { stop-color: #8b5cf62e; }
+        }
+        @keyframes loader-particles {
+            0%, 100% { translate: 0px 16px; }
+            50% { translate: 0px 6px; }
+        }
+        .loader-particle {
+            animation: loader-particles 4s ease-in-out infinite;
+        }
+        #animatedStop {
+            animation: loader-umbral 4s infinite;
+        }
+        #animatedStop2 {
+            animation: loader-umbral2 4s infinite;
+        }
+        #bounce {
+            animation: loader-bounce 4s ease-in-out infinite;
+            translate: 0px 36px;
+        }
+        #bounce2 {
+            animation: loader-bounce2 4s ease-in-out infinite;
+            translate: 0px 46px;
+            animation-delay: 0.5s;
+        }
+
 </style>
 
     <script>
