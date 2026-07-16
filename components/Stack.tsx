@@ -6,14 +6,10 @@ const stackTop = [
   { name: 'NodeJS', icon: 'devicon-nodejs-plain' },
   { name: 'Baileys', icon: 'devicon-npm-original-wordmark' },
   { name: 'Express', icon: 'devicon-express-original' },
-  { name: 'TypeScript', icon: 'devicon-typescript-plain' },
   { name: 'JavaScript', icon: 'devicon-javascript-plain' },
-  { name: 'React', icon: 'devicon-react-original' },
 ];
 
 const stackBottom = [
-  { name: 'SQLite', icon: 'devicon-sqlite-plain' },
-  { name: 'MongoDB', icon: 'devicon-mongodb-plain' },
   { name: 'MySQL', icon: 'devicon-mysql-plain' },
   { name: 'HTML5', icon: 'devicon-html5-plain' },
   { name: 'CSS3', icon: 'devicon-css3-plain' },
