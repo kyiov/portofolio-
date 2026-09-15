@@ -14,10 +14,10 @@ const Contact: React.FC = () => {
             className="max-w-4xl"
           >
             <h2 className="font-jakarta text-[14vw] md:text-[10vw] lg:text-[8vw] font-black uppercase tracking-[-0.05em] leading-[0.8] text-white">
-              LET'S <br/> <span className="text-accent">CREATE</span>
+              LET'S <br/> <span className="text-accent">TALK</span>
             </h2>
             <p className="mt-8 md:mt-12 text-lg md:text-xl lg:text-3xl text-white/60 font-light max-w-2xl leading-tight">
-              Punya ide menarik? Saya selalu siap untuk tantangan baru. Hubungi saya untuk konsultasi gratis.
+              Need a bot, API, or automation? Reach out.
             </p>
           </motion.div>
           
@@ -39,9 +39,8 @@ const Contact: React.FC = () => {
 
         <div className="flex flex-col">
           {[
-            { label: 'Open Source', title: 'GITHUB', url: 'https://github.com/Har404-err', accent: '#d4ff00' },
-            { label: 'Chat Now', title: 'WHATSAPP', url: 'https://wa.me/6282148570591', accent: '#ffffff' },
-            { label: 'Join Telegram', title: 'TELEGRAM', url: 'https://t.me/Muh4r', accent: '#38bdf8' }
+            { label: 'Open Source', title: 'GITHUB', url: 'https://github.com/muhar363', accent: '#d4ff00' },
+            { label: 'Chat Now', title: 'WHATSAPP', url: 'https://wa.me/6282148570591', accent: '#ffffff' }
           ].map((link, idx) => (
             <motion.a 
               key={idx}

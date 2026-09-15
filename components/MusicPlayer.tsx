@@ -7,11 +7,11 @@ type Track = TrackResult & { query?: string };
 const DEFAULT_COVER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"%3E%3Cdefs%3E%3ClinearGradient id="g" x1="0" y1="0" x2="1" y2="1"%3E%3Cstop stop-color="%2300f2fe"/%3E%3Cstop offset="1" stop-color="%234facfe"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="512" height="512" rx="96" fill="%2309090b"/%3E%3Cpath d="M112 366V146l144 124 144-124v220" fill="none" stroke="url(%23g)" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/%3E%3C/svg%3E';
 
 const DEFAULT_TRACK: Track = {
-  title: 'Seventh Heaven',
-  artist: 'Unknown Artist',
+  title: 'No track loaded',
+  artist: 'Search to play',
   src: '',
   image: DEFAULT_COVER,
-  query: 'Seventh Heaven',
+  query: '',
 };
 
 const STORAGE_KEY = 'musicPlayerTrack';
@@ -128,7 +128,6 @@ const MusicPlayer: React.FC = () => {
     }
   }, [playTrack]);
 
-  // Satu elemen audio dipakai sepanjang hidup komponen, seperti player KyioAPI.
   useEffect(() => {
     const audio = new Audio();
     audio.preload = 'auto';
@@ -148,7 +147,6 @@ const MusicPlayer: React.FC = () => {
     const onEnded = () => {
       audio.currentTime = 0;
       setProgress(0);
-      // Ulangi lagu aktif tanpa berpindah ke lagu berikutnya.
       void audio.play().catch(() => setIsPlaying(false));
     };
 
@@ -193,7 +191,6 @@ const MusicPlayer: React.FC = () => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(track));
     } catch {
-      // Private browsing atau storage penuh tidak boleh merusak playback.
     }
   }, [track]);
 
@@ -281,7 +278,6 @@ const MusicPlayer: React.FC = () => {
     if (audioRef.current.paused) void togglePlay();
   }, [togglePlay]);
 
-  // Kontrol media OS (headset, lock screen, notification) mengikuti player KyioAPI.
   useEffect(() => {
     if (!('mediaSession' in navigator)) return;
     navigator.mediaSession.metadata = new MediaMetadata({

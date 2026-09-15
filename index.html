@@ -6,6 +6,30 @@
     <link rel="icon" type="image/png" sizes="256x256" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="256x256" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MUH4RHQ — Bot developer & API engineer. TypeScript, Python, React, Node.js. WhatsApp bots, REST APIs, and automation tools.">
+    <meta name="author" content="MUH4RHQ">
+    <meta name="theme-color" content="#050505">
+    <meta name="color-scheme" content="dark">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MUH4RHQ | API Engineer & Bot Dev">
+    <meta property="og:description" content="High-Performance API Engineer & Automation Specialist. Crafting digital experiences & intelligent bots.">
+    <meta property="og:url" content="https://muh4r.my.id">
+    <meta property="og:image" content="https://c.termai.cc/i161/eVaNqs7.jpg">
+    <meta property="og:site_name" content="MUH4RHQ">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MUH4RHQ | API Engineer & Bot Dev">
+    <meta name="twitter:description" content="High-Performance API Engineer & Automation Specialist.">
+    <meta name="twitter:image" content="https://c.termai.cc/i161/eVaNqs7.jpg">
+    
+    <!-- Performance: preconnect to external origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://c.termai.cc">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <title>MUH4RHQ | API Engineer & Bot Dev</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
@@ -28,12 +52,12 @@
             --text: var(--color-text);
             --secondary: var(--color-secondary);
         }
+        html { scroll-padding-top: 100px; }
         body {
             font-family: 'Archivo', sans-serif;
             background-color: var(--bg);
             color: var(--text);
             overflow-x: hidden;
-            cursor: none;
             -webkit-font-smoothing: antialiased;
         }
         .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -55,6 +79,7 @@
             background-image: linear-gradient(to right, color-mix(in srgb, var(--color-accent-solid) 5%, transparent) 1px, transparent 1px),
                               linear-gradient(to bottom, color-mix(in srgb, var(--color-accent-solid) 5%, transparent) 1px, transparent 1px);
             background-size: 80px 80px;
+            opacity: 0.4;
             z-index: -1;
             pointer-events: none;
         }
@@ -136,8 +161,36 @@
         }
 
         * {
-          outline: none !important;
           -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Keyboard accessibility: restore focus outline for keyboard users */
+        :focus-visible {
+          outline: 2px solid var(--color-accent-start);
+          outline-offset: 2px;
+          border-radius: 4px;
+        }
+
+        /* Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .scanline { display: none; }
+            #custom-cursor, #cursor-follower { display: none; }
+            body { cursor: auto; }
+        }
+
+        /* Desktop-only: custom cursor and hidden native cursor */
+        @media (pointer: fine) {
+            body { cursor: none; }
+        }
+        @media (pointer: coarse) {
+            #custom-cursor, #cursor-follower { display: none; }
+            body { cursor: auto; }
         }
         
         ::selection { background: var(--neon); color: white; }
@@ -184,48 +237,6 @@
             color: transparent;
         }
 
-        /* Loader kubus (Uiverse by Juanes200122, direkolor neon) */
-        @keyframes loader-bounce {
-            0%, 100% { translate: 0px 36px; }
-            50% { translate: 0px 46px; }
-        }
-        @keyframes loader-bounce2 {
-            0%, 100% { translate: 0px 46px; }
-            50% { translate: 0px 56px; }
-        }
-        @keyframes loader-umbral {
-            0% { stop-color: #00f2fe2e; }
-            50% { stop-color: rgba(0, 242, 254, 0.52); }
-            100% { stop-color: #00f2fe2e; }
-        }
-        @keyframes loader-umbral2 {
-            0% { stop-color: #8b5cf62e; }
-            50% { stop-color: rgba(139, 92, 246, 0.52); }
-            100% { stop-color: #8b5cf62e; }
-        }
-        @keyframes loader-particles {
-            0%, 100% { translate: 0px 16px; }
-            50% { translate: 0px 6px; }
-        }
-        .loader-particle {
-            animation: loader-particles 4s ease-in-out infinite;
-        }
-        #animatedStop {
-            animation: loader-umbral 4s infinite;
-        }
-        #animatedStop2 {
-            animation: loader-umbral2 4s infinite;
-        }
-        #bounce {
-            animation: loader-bounce 4s ease-in-out infinite;
-            translate: 0px 36px;
-        }
-        #bounce2 {
-            animation: loader-bounce2 4s ease-in-out infinite;
-            translate: 0px 46px;
-            animation-delay: 0.5s;
-        }
-
 </style>
 
     <script>
@@ -251,28 +262,7 @@
     <div class="scanline"></div>
     <div id="custom-cursor"></div>
     <div id="cursor-follower"></div>
-    <div id="root">
-      <div style="position:fixed;inset:0;background:#050505;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;">
-        <div style="position:relative;width:140px;height:140px;display:flex;align-items:center;justify-content:center;">
-          <div style="position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(0,242,254,0.25), rgba(139,92,246,0.12), transparent 65%);filter:blur(30px);pointer-events:none;animation:initGlow 2.5s ease-in-out infinite;"></div>
-          <svg viewBox="0 0 100 100" width="140" height="140" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 18px rgba(0,242,254,0.45));">
-            <defs>
-              <linearGradient id="initMGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#00f2fe" />
-                <stop offset="50%" stop-color="#38bdf8" />
-                <stop offset="100%" stop-color="#8b5cf6" />
-              </linearGradient>
-            </defs>
-            <path d="M 15 78 L 15 22 L 50 52 L 85 22 L 85 78" stroke="url(#initMGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" style="filter:blur(4px);" />
-            <path d="M 15 78 L 15 22 L 50 52 L 85 22 L 85 78" stroke="url(#initMGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:220;stroke-dashoffset:220;animation:initMDash 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;" />
-          </svg>
-        </div>
-      </div>
-      <style>
-        @keyframes initMDash { to { stroke-dashoffset: 0; } }
-        @keyframes initGlow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.08); } }
-      </style>
-    </div>
+    <div id="root"></div>
 <script type="module" src="/index.tsx"></script>
 </body>
 </html>

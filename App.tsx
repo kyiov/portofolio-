@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Hero from './components/Hero';
 import About from './components/About';
 import Projects from './components/Projects';
@@ -7,8 +7,7 @@ import Stack from './components/Stack';
 import Contact from './components/Contact';
 import Navbar from './components/Navbar';
 import MusicPlayer from './components/MusicPlayer';
-import MLoader from './components/MLoader';
-import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 
 const App: React.FC = () => {
   const { scrollYProgress } = useScroll();
@@ -17,47 +16,17 @@ const App: React.FC = () => {
     damping: 30,
     restDelta: 0.001
   });
-  
-  const [isSiteLoading, setIsSiteLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    let currentProgress = 0;
-    let isLoaded = false;
-
-    const handleLoad = () => {
-      isLoaded = true;
-    };
-
-    if (document.readyState === 'complete') {
-      isLoaded = true;
-    } else {
-      window.addEventListener('load', handleLoad);
-    }
-
-    const timer = setInterval(() => {
-      currentProgress += isLoaded ? 10 : 3;
-      if (currentProgress >= 100) {
-        currentProgress = 100;
-        setProgress(100);
-        clearInterval(timer);
-        setTimeout(() => setIsSiteLoading(false), 300);
-      } else {
-        setProgress(currentProgress);
-      }
-    }, 35);
-
-    return () => {
-      clearInterval(timer);
-      window.removeEventListener('load', handleLoad);
-    };
-  }, []);
 
   useEffect(() => {
     const dot = document.getElementById('custom-cursor');
     const ring = document.getElementById('cursor-follower');
     
-    // Helper untuk set posisi & visibilitas
+    /**
+     * Atur posisi dan visibilitas cursor (dot dan ring).
+     * @param x - Koordinat X di viewport
+     * @param y - Koordinat Y di viewport
+     * @param visible - Tampilkan cursor atau sembunyikan
+     */
     const setCursor = (x: number, y: number, visible: boolean) => {
         if (!dot || !ring) return;
         
@@ -72,10 +41,8 @@ const App: React.FC = () => {
         }
     };
 
-    // Desktop Mouse
     const onMouseMove = (e: MouseEvent) => setCursor(e.clientX, e.clientY, true);
     
-    // Mobile Touch (Restored Dragging)
     const onTouchStart = (e: TouchEvent) => setCursor(e.touches[0].clientX, e.touches[0].clientY, true);
     const onTouchMove = (e: TouchEvent) => setCursor(e.touches[0].clientX, e.touches[0].clientY, true);
     const onTouchEnd = () => {
@@ -85,7 +52,6 @@ const App: React.FC = () => {
         }
     };
 
-    // Event Listeners
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('touchmove', onTouchMove, { passive: true });
@@ -114,20 +80,6 @@ const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen selection:bg-accent selection:text-black bg-[#050505]">
-      <AnimatePresence>
-        {isSiteLoading && (
-          <motion.div
-            key="m-loading"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-[999] bg-[#050505] flex items-center justify-center font-space overflow-hidden"
-          >
-            <MLoader progress={progress} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <motion.div 
         className="fixed top-0 left-0 right-0 h-[4px] bg-accent z-[100] origin-left shadow-[0_0_15px_accent-glow]"
         style={{ scaleX }}
@@ -149,7 +101,7 @@ const App: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
            <div className="flex flex-col gap-6">
               <span className="font-jakarta text-2xl font-black uppercase text-white">MUH4RHQ</span>
-              <p className="text-white/40 max-w-xs font-medium">Crafting digital experiences & intelligent bots. Specialized in API Development and Automation.</p>
+              <p className="text-white/40 max-w-xs font-medium">Bot developer & API engineer. TypeScript, Python, React, Node.js.</p>
            </div>
            
            <div className="flex flex-col gap-6">
@@ -164,16 +116,15 @@ const App: React.FC = () => {
            <div className="flex flex-col gap-6 md:items-end">
               <span className="text-[10px] uppercase font-black tracking-widest text-accent">Connect</span>
               <div className="flex gap-6">
-                 <a href="https://github.com/Har404-err" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-accent transition-colors interactive uppercase">Github</a>
+                 <a href="https://github.com/muhar363" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-accent transition-colors interactive uppercase">Github</a>
                  <a href="https://wa.me/6282148570591" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-accent transition-colors interactive uppercase">Whatsapp</a>
-                 <a href="https://t.me/Muh4r" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-accent transition-colors interactive uppercase">Telegram</a>
               </div>
            </div>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-10 opacity-20">
-          <span className="text-[10px] uppercase tracking-[0.6em] font-black">© {new Date().getFullYear()} MUH4RHQ PORTFOLIO</span>
-          <span className="text-[10px] uppercase tracking-[0.6em] font-black">BUILT WITH SPEED</span>
+          <span className="text-[10px] uppercase tracking-[0.6em] font-black">© {new Date().getFullYear()} MUH4RHQ</span>
+          <span className="text-[10px] uppercase tracking-[0.6em] font-black">TYPESCRIPT · PYTHON · REACT</span>
         </div>
       </footer>
     </div>

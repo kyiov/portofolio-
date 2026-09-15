@@ -33,7 +33,6 @@ const Hero: React.FC = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 md:px-6 lg:px-20 overflow-hidden bg-[#050505]">
-      {/* Background Profile Layer - Editorial Aesthetic in Full Color */}
       <motion.div 
         style={{ y: yImage, scale, opacity }}
         className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center p-6 md:p-20"
@@ -43,6 +42,8 @@ const Hero: React.FC = () => {
             src="https://c.termai.cc/i161/eVaNqs7.jpg" 
             alt="MUH4RHQ" 
             className="w-full h-full object-cover rounded-[50px] md:rounded-[100px]"
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505]"></div>
@@ -50,7 +51,6 @@ const Hero: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Main Content Layer */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
         <motion.div variants={itemVariants} className="mb-6 flex items-center gap-4">
           <span className="w-8 md:w-16 h-px bg-accent/50"></span>
           <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[1em] text-accent">
-            EST. MMXXV
+            EST. 2025
           </span>
           <span className="w-8 md:w-16 h-px bg-accent/50"></span>
         </motion.div>
@@ -79,7 +79,7 @@ const Hero: React.FC = () => {
           className="mt-12 md:mt-20 max-w-3xl px-4"
         >
           <p className="text-xl md:text-3xl lg:text-4xl text-white/90 font-light tracking-tight leading-snug">
-            <span className="text-accent font-black italic">High-Performance API Engineer</span> & <span className="text-white font-black italic underline decoration-accent underline-offset-[12px]">Automation Specialist</span>.
+            <span className="text-accent font-black italic">API Engineer</span> & <span className="text-white font-black italic underline decoration-accent underline-offset-[12px]">Bot Developer</span>.
           </p>
         </motion.div>
 
