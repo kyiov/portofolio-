@@ -4,7 +4,7 @@
 
 **Personal Portfolio**
 
-[![Live](https://img.shields.io/badge/Live-muh4rhq.vercel.app-000?style=flat-square&labelColor=000&color=2563EB)](https://muh4rhq.vercel.app)
+[![Live](https://img.shields.io/badge/Live-muh4r.zone.id-000?style=flat-square&labelColor=000&color=2563EB)](https://muh4r.zone.id)
 [![GitHub](https://img.shields.io/badge/GitHub-kyiov-000?style=flat-square&logo=github&labelColor=000)](https://github.com/kyiov)
 
 </div>
