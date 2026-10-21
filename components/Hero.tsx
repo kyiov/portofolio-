@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
         <motion.div variants={itemVariants} className="mb-6 flex items-center gap-4">
           <span className="w-8 md:w-16 h-px bg-accent/50"></span>
           <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[1em] text-accent">
-            EST. 2025
+            EST. MMXXV
           </span>
           <span className="w-8 md:w-16 h-px bg-accent/50"></span>
         </motion.div>
