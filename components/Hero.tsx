@@ -87,16 +87,18 @@ const Hero: React.FC = () => {
           variants={itemVariants}
           className="mt-16 md:mt-24"
         >
-          <a 
+          <motion.a 
             href="#contact" 
-            className="interactive group relative px-10 py-5 overflow-hidden rounded-full transition-all block"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.95 }}
+            className="interactive group relative px-10 py-5 overflow-hidden rounded-full transition-all block touch-manipulation active:scale-95"
           >
             <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
             <div className="absolute inset-0 border border-white/20 rounded-full group-hover:border-accent transition-colors"></div>
             <span className="relative z-10 text-white group-hover:text-black font-jakarta font-black uppercase text-[10px] md:text-xs tracking-[0.3em] flex items-center gap-4 transition-colors">
               Start a Project <span className="text-xl transform group-hover:translate-x-2 transition-transform">→</span>
             </span>
-          </a>
+          </motion.a>
         </motion.div>
       </motion.div>
     </section>

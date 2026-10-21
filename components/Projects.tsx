@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 /* ─── KyioAPI code preview ─── */
@@ -40,6 +40,79 @@ const gistifyFeatures = [
   { icon: '▣', label: 'Syntax Highlighting' },
 ];
 
+/* ─── Tactile 3D Tilt & Touch Spotlight Wrapper ─── */
+export const InteractiveSpotlightCard: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = '' }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [spotlight, setSpotlight] = useState<{ x: number; y: number; opacity: number; rx: number; ry: number }>({
+    x: 0,
+    y: 0,
+    opacity: 0,
+    rx: 0,
+    ry: 0,
+  });
+
+  const handleMove = (clientX: number, clientY: number) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    const px = (x / rect.width) * 2 - 1;
+    const py = (y / rect.height) * 2 - 1;
+
+    setSpotlight({
+      x,
+      y,
+      opacity: 1,
+      rx: -py * 3.5, // max 3.5deg tilt
+      ry: px * 3.5,
+    });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    handleMove(e.clientX, e.clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches[0]) {
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  };
+
+  const handleEnd = () => {
+    setSpotlight((prev) => ({ ...prev, opacity: 0, rx: 0, ry: 0 }));
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleEnd}
+      onTouchStart={handleTouchMove}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleEnd}
+      style={{
+        transform: `perspective(1000px) rotateX(${spotlight.rx}deg) rotateY(${spotlight.ry}deg)`,
+        transition: spotlight.opacity === 0 ? 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+      }}
+      className={`relative overflow-hidden transition-all duration-300 ${className}`}
+    >
+      {/* Radial Spotlight Follower (follows mouse & touch finger) */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300"
+        style={{
+          opacity: spotlight.opacity,
+          background: `radial-gradient(550px circle at ${spotlight.x}px ${spotlight.y}px, rgba(0, 242, 254, 0.1), transparent 45%)`,
+        }}
+      />
+      {children}
+    </div>
+  );
+};
+
 /* ─── Code showcase component ─── */
 const CodeShowcase: React.FC = () => {
   const [activeTab, setActiveTab] = useState<CodeLanguage>('curl');
@@ -57,103 +130,82 @@ const CodeShowcase: React.FC = () => {
         textArea.style.position = 'fixed';
         textArea.style.opacity = '0';
         document.body.appendChild(textArea);
-        try {
-          textArea.select();
-          const copied = document.execCommand('copy');
-          if (!copied) throw new Error('Clipboard fallback failed');
-        } finally {
-          textArea.remove();
-        }
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
       }
       setCopyState('copied');
+      setTimeout(() => setCopyState('idle'), 2000);
     } catch {
       setCopyState('failed');
+      setTimeout(() => setCopyState('idle'), 3000);
     }
-    window.setTimeout(() => setCopyState('idle'), 2200);
   }, [activeTab]);
 
   return (
-    <div className="lg:col-span-6 w-full" aria-label="Contoh request KyioAPI">
-      <div className="bg-[#050507] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between gap-3 px-4 py-3 bg-white/[0.02] border-b border-white/5">
-          <div className="flex min-w-0 items-center gap-2">
-            <div aria-hidden="true" className="flex shrink-0 items-center gap-1.5">
-              <div className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
-              <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/80" />
-              <div className="h-2.5 w-2.5 rounded-full bg-green-500/80" />
-            </div>
-            <span className="truncate text-[10px] font-mono text-white/50">API_REQUEST_PREVIEW</span>
+    <div className="w-full lg:col-span-6">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#050507] shadow-2xl transition-colors hover:border-white/20">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/5 bg-white/[0.02] px-4 py-3">
+          <div className="flex items-center gap-1.5" role="tablist" aria-label="Bahasa kode contoh">
+            {(Object.keys(codeSnippets) as CodeLanguage[]).map((lang) => {
+              const active = activeTab === lang;
+              return (
+                <button
+                  key={lang}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setActiveTab(lang)}
+                  className={`interactive relative rounded-lg px-3 py-1 font-mono text-xs transition-all active:scale-95 touch-manipulation ${
+                    active ? 'bg-accent/15 text-accent font-bold' : 'text-white/40 hover:text-white'
+                  }`}
+                >
+                  {codeLanguageLabels[lang]}
+                  {active && (
+                    <motion.span
+                      layoutId="tab-underline"
+                      className="absolute inset-0 rounded-lg border border-accent/40"
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
+
           <button
             type="button"
-            onClick={() => void handleCopy()}
-            aria-live="polite"
-            className="min-h-11 shrink-0 rounded-lg bg-white/5 px-3 text-[10px] font-mono font-bold text-white/70 transition hover:bg-white/10 hover:text-white"
+            onClick={handleCopy}
+            className="interactive flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-mono text-white/60 transition-all hover:border-accent/40 hover:text-white active:scale-95 touch-manipulation"
           >
-            {copyState === 'copied' ? '✓ COPIED' : copyState === 'failed' ? 'COPY FAILED' : 'COPY CODE'}
+            {copyState === 'copied' ? (
+              <>
+                <svg className="w-3 h-3 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span className="text-accent font-bold">Copied!</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                <span>Copy</span>
+              </>
+            )}
           </button>
         </div>
 
-        <div role="tablist" aria-label="Pilih bahasa contoh kode" className="flex overflow-x-auto border-b border-white/5 bg-black/40">
-          {(Object.keys(codeSnippets) as CodeLanguage[]).map((language) => {
-            const isActive = activeTab === language;
-            const tabId = `kyio-tab-${language}`;
-            const panelId = `kyio-panel-${language}`;
-            return (
-              <button
-                key={language}
-                id={tabId}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-controls={panelId}
-                tabIndex={isActive ? 0 : -1}
-                onClick={() => {
-                  setActiveTab(language);
-                  setCopyState('idle');
-                }}
-                onKeyDown={(event) => {
-                  const languages = Object.keys(codeSnippets) as CodeLanguage[];
-                  const currentIndex = languages.indexOf(language);
-                  const nextIndex = event.key === 'ArrowRight'
-                    ? (currentIndex + 1) % languages.length
-                    : event.key === 'ArrowLeft'
-                      ? (currentIndex - 1 + languages.length) % languages.length
-                      : event.key === 'Home'
-                        ? 0
-                        : event.key === 'End'
-                          ? languages.length - 1
-                          : -1;
-                  if (nextIndex < 0) return;
-                  event.preventDefault();
-                  const nextLanguage = languages[nextIndex];
-                  setActiveTab(nextLanguage);
-                  document.getElementById(`kyio-tab-${nextLanguage}`)?.focus();
-                }}
-                className={`min-h-11 shrink-0 border-b-2 px-4 py-2 text-xs font-mono transition-colors focus-visible:outline-none ${
-                  isActive
-                    ? 'border-accent bg-accent/5 text-accent'
-                    : 'border-transparent text-white/50 hover:bg-white/[0.04] hover:text-white'
-                }`}
-              >
-                {codeLanguageLabels[language]}
-              </button>
-            );
-          })}
+        <div className="min-h-32 max-h-60 overflow-auto bg-black/85 p-4 font-mono text-xs leading-relaxed text-white/80">
+          <pre className="whitespace-pre-wrap break-words sm:whitespace-pre">
+            <code>{codeSnippets[activeTab]}</code>
+          </pre>
         </div>
 
-        <div
-          id={`kyio-panel-${activeTab}`}
-          role="tabpanel"
-          aria-labelledby={`kyio-tab-${activeTab}`}
-          tabIndex={0}
-          className="min-h-32 max-h-60 overflow-auto bg-black/80 p-4 font-mono text-xs leading-relaxed text-white/80 focus-visible:outline-none"
-        >
-          <pre className="whitespace-pre-wrap break-words sm:whitespace-pre"><code>{codeSnippets[activeTab]}</code></pre>
+        <div className="border-t border-white/5 px-4 py-2 text-[10px] font-mono text-white/40 flex justify-between items-center">
+          <span>{copyState === 'copied' ? '✓ Tersalin ke clipboard.' : 'Endpoint: /api/v2/ai/gpt-5-6-terra'}</span>
+          <span className="text-accent font-bold">200 OK</span>
         </div>
-        <p aria-live="polite" className="border-t border-white/5 px-4 py-2 text-[10px] font-mono text-white/40">
-          {copyState === 'copied' ? `Snippet ${codeLanguageLabels[activeTab]} tersalin.` : copyState === 'failed' ? 'Clipboard tidak tersedia. Salin manual.' : 'Ganti bahasa untuk melihat contoh integrasi.'}
-        </p>
       </div>
     </div>
   );
@@ -173,18 +225,13 @@ const Projects: React.FC = () => {
           </div>
           <div className="max-w-md">
             <p className="text-base font-light leading-relaxed text-white/65 md:text-lg">
-              Two platforms I built and maintain: a REST API gateway for developers, and a code snippet platform with GitHub Gist sync.
+              Two platforms I built and maintain: a high-throughput REST API gateway, and a developer code snippet platform.
             </p>
           </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a0d] p-5 shadow-[0_0_50px_rgba(0,0,0,0.8)] sm:p-7 md:p-12 mb-8"
-        >
+        {/* Project 1: KyioAPI Gateway */}
+        <InteractiveSpotlightCard className="group rounded-3xl border border-white/10 bg-[#0a0a0d] p-5 shadow-[0_0_50px_rgba(0,0,0,0.8)] sm:p-7 md:p-12 mb-8 active:scale-[0.99] touch-manipulation">
           <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-accent/10 blur-[100px]" />
 
           <div className="relative z-10 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
@@ -196,13 +243,16 @@ const Projects: React.FC = () => {
               <div>
                 <h3 className="mb-3 font-space text-3xl font-bold tracking-tight text-white md:text-5xl">KyioAPI Gateway</h3>
                 <p className="text-sm font-light leading-relaxed text-white/65 md:text-base">
-                  REST API gateway with 250+ endpoints for AI, media downloading, stalking, and tools. Multi-engine fallback keeps it working when individual providers go down.
+                  REST API gateway with 250+ endpoints for AI, media downloading, stalking, and automation. Multi-engine fallback keeps it working when individual providers go down.
                 </p>
               </div>
 
               <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-3" aria-label="Kategori endpoint KyioAPI">
                 {kyioCategories.map((cat) => (
-                  <div key={cat.label} className="group/cat relative rounded-xl border border-white/5 bg-white/[0.02] p-3 transition-all hover:border-accent/30 hover:bg-white/[0.04]">
+                  <div
+                    key={cat.label}
+                    className="group/cat relative rounded-xl border border-white/5 bg-white/[0.02] p-3 transition-all hover:border-accent/30 hover:bg-white/[0.04] active:scale-95 touch-manipulation"
+                  >
                     <span className="block text-[9px] font-mono uppercase tracking-wider text-white/40">{cat.label}</span>
                     <span className="block font-space text-xl font-black text-white transition group-hover/cat:text-accent">{cat.count}</span>
                     <span className="block text-[9px] text-white/30">{cat.desc}</span>
@@ -227,7 +277,7 @@ const Projects: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Buka KyioAPI Gateway di tab baru"
-                  className="interactive inline-flex min-h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#00f2fe] to-[#4facfe] px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#050505] transition duration-200 hover:brightness-110"
+                  className="interactive inline-flex min-h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#00f2fe] to-[#4facfe] px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#050505] transition duration-200 hover:brightness-110 active:scale-95 touch-manipulation"
                 >
                   <span>Buka Gateway</span>
                   {externalLinkIcon}
@@ -238,20 +288,15 @@ const Projects: React.FC = () => {
 
             <CodeShowcase />
           </div>
-        </motion.div>
+        </InteractiveSpotlightCard>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.15 }}
-          className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a0d] p-5 shadow-[0_0_50px_rgba(0,0,0,0.8)] sm:p-7 md:p-12"
-        >
+        {/* Project 2: Gistify */}
+        <InteractiveSpotlightCard className="group rounded-3xl border border-white/10 bg-[#0a0a0d] p-5 shadow-[0_0_50px_rgba(0,0,0,0.8)] sm:p-7 md:p-12 active:scale-[0.99] touch-manipulation">
           <div aria-hidden="true" className="pointer-events-none absolute -left-32 -bottom-32 h-96 w-96 rounded-full bg-accent/10 blur-[100px]" />
 
           <div className="relative z-10 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-6 w-full order-2 lg:order-1">
-              <div className="bg-[#050507] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+              <div className="bg-[#050507] border border-white/10 rounded-2xl overflow-hidden shadow-2xl transition-colors hover:border-white/20">
                 <div className="flex items-center justify-between gap-3 px-4 py-3 bg-white/[0.02] border-b border-white/5">
                   <div className="flex min-w-0 items-center gap-2">
                     <div aria-hidden="true" className="flex shrink-0 items-center gap-1.5">
@@ -262,7 +307,7 @@ const Projects: React.FC = () => {
                     <span className="truncate text-[10px] font-mono text-white/50">gistify.web.id/snippet/akunlama-scraper</span>
                   </div>
                 </div>
-                <div className="bg-black/80 p-4 font-mono text-xs leading-relaxed text-white/80">
+                <div className="bg-black/85 p-4 font-mono text-xs leading-relaxed text-white/80">
                   <div className="flex gap-4">
                     <div className="select-none text-white/20 text-right">
                       {Array.from({ length: 8 }, (_, i) => (
@@ -306,7 +351,10 @@ const Projects: React.FC = () => {
 
               <div className="grid w-full grid-cols-2 gap-3" aria-label="Fitur Gistify">
                 {gistifyFeatures.map((feat) => (
-                  <div key={feat.label} className="group/feat flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-3 transition-all hover:border-accent/30 hover:bg-white/[0.04]">
+                  <div
+                    key={feat.label}
+                    className="group/feat flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-3 transition-all hover:border-accent/30 hover:bg-white/[0.04] active:scale-95 touch-manipulation"
+                  >
                     <span className="text-lg text-accent">{feat.icon}</span>
                     <span className="text-xs font-medium text-white/70 transition group-hover/feat:text-white">{feat.label}</span>
                   </div>
@@ -330,7 +378,7 @@ const Projects: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Buka Gistify di tab baru"
-                  className="interactive inline-flex min-h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#00f2fe] to-[#4facfe] px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#050505] transition duration-200 hover:brightness-110"
+                  className="interactive inline-flex min-h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#00f2fe] to-[#4facfe] px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#050505] transition duration-200 hover:brightness-110 active:scale-95 touch-manipulation"
                 >
                   <span>Buka Gistify</span>
                   {externalLinkIcon}
@@ -339,7 +387,7 @@ const Projects: React.FC = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </InteractiveSpotlightCard>
       </div>
     </section>
   );

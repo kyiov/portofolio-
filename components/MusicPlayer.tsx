@@ -19,11 +19,16 @@ const DEFAULT_TRACK: Track = {
 const MusicPlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [ripple, setRipple] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const togglePlay = useCallback(async () => {
     const audio = audioRef.current;
     if (!audio) return;
+
+    // Trigger visual tactile shockwave ripple on tap/click
+    setRipple(true);
+    setTimeout(() => setRipple(false), 700);
 
     try {
       if (audio.paused) {
@@ -99,20 +104,29 @@ const MusicPlayer: React.FC = () => {
     >
       {/* 
         SETENGAH PIRINGAN HITAM DI TEPI LAYAR
-        - Bersih, minimalis, proporsional.
+        - Bersih, minimalis, ergonomis untuk jempol di mobile & kursor di desktop.
+        - Tactile spin-up & needle-drop physics.
         - Tidak ada tombol di luar piringan.
         - Berputar saat play (CSS animationPlayState), berhenti di posisi terakhir saat pause.
-        - Klik langsung piringan untuk Play / Pause.
+        - Klik / touch langsung piringan untuk Play / Pause.
       */}
       <button
         type="button"
         onClick={() => void togglePlay()}
         aria-label={isPlaying ? 'Jeda musik Black Beatles' : 'Putar musik Black Beatles'}
         title={isPlaying ? 'Black Beatles (Klik untuk jeda)' : 'Black Beatles (Klik untuk putar)'}
-        className="group relative block outline-none cursor-pointer p-0 m-0 bg-transparent border-0"
+        className="group relative block outline-none cursor-pointer p-0 m-0 bg-transparent border-0 touch-manipulation"
       >
+        {/* Ripple Shockwave Effect on Touch / Click */}
+        {ripple && (
+          <span
+            className="absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-accent/60 animate-ping pointer-events-none"
+            style={{ animationDuration: '600ms' }}
+          />
+        )}
+
         {/* Container setengah piringan (offset 50% ke tepi layar kanan) */}
-        <div className="relative w-16 h-16 sm:w-20 sm:h-20 translate-x-1/2 transition-transform duration-300 ease-out group-hover:translate-x-[38%] group-active:scale-95">
+        <div className="relative w-16 h-16 sm:w-20 sm:h-20 translate-x-1/2 transition-transform duration-300 ease-out group-hover:translate-x-[38%] group-active:scale-90 active:scale-90">
           {/* Piringan Vinil Hitam dengan alur mikro konsentris & rotasi halus */}
           <div
             className="w-full h-full rounded-full border border-white/20 shadow-[-6px_0_20px_rgba(0,0,0,0.85)] relative overflow-hidden"
@@ -151,8 +165,8 @@ const MusicPlayer: React.FC = () => {
               {/* Lubang Spindel Tengah */}
               <div className="absolute inset-0 m-auto w-1.5 h-1.5 rounded-full bg-black border border-white/40 shadow-inner" />
 
-              {/* Hover overlay: ikon Play / Pause taktil halus di tengah label */}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center text-white">
+              {/* Hover & Touch Active overlay: ikon Play / Pause taktil halus */}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-200 flex items-center justify-center text-white">
                 {loading ? (
                   <span className="w-2.5 h-2.5 border border-white/40 border-t-accent rounded-full animate-spin" />
                 ) : isPlaying ? (
