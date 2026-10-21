@@ -68,14 +68,18 @@ const Contact: React.FC = () => {
           <div className="border-t border-white/5"></div>
         </div>
 
-        <div className="mt-32 grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5">
-           <div className="p-12 md:p-16 bg-[#050505] hover:bg-white/[0.02] transition-colors">
-              <span className="text-[11px] uppercase font-black tracking-[0.6em] text-accent mb-8 block">Presence</span>
-              <p className="font-jakarta text-3xl md:text-4xl font-black text-white uppercase tracking-tight leading-none">PONTIANAK, ID <br/> <span className="text-white/20">UTC+7</span></p>
+        <div className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5 border border-white/5">
+           <div className="p-10 md:p-14 bg-[#050505] hover:bg-white/[0.02] transition-colors">
+              <span className="text-[11px] uppercase font-black tracking-[0.5em] text-accent mb-6 block">Education</span>
+              <p className="font-jakarta text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-none">TEKNIK INFORMATIKA <br/> <span className="text-white/20 text-lg md:text-xl font-light">MAHASISWA</span></p>
            </div>
-           <div className="p-12 md:p-16 bg-[#050505] hover:bg-white/[0.02] transition-colors">
-              <span className="text-[11px] uppercase font-black tracking-[0.6em] text-accent mb-8 block">Experience</span>
-              <p className="font-jakarta text-3xl md:text-4xl font-black text-white uppercase tracking-tight leading-none">BUILDING SINCE <br/> <span className="text-white/20">2025</span></p>
+           <div className="p-10 md:p-14 bg-[#050505] hover:bg-white/[0.02] transition-colors">
+              <span className="text-[11px] uppercase font-black tracking-[0.5em] text-accent mb-6 block">Presence</span>
+              <p className="font-jakarta text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-none">PONTIANAK, ID <br/> <span className="text-white/20 text-lg md:text-xl font-light">UTC+7</span></p>
+           </div>
+           <div className="p-10 md:p-14 bg-[#050505] hover:bg-white/[0.02] transition-colors">
+              <span className="text-[11px] uppercase font-black tracking-[0.5em] text-accent mb-6 block">Experience</span>
+              <p className="font-jakarta text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-none">BUILDING SINCE <br/> <span className="text-white/20 text-lg md:text-xl font-light">2025</span></p>
            </div>
         </div>
       </div>

@@ -137,7 +137,7 @@ const App: React.FC = () => {
               MUH4RHQ<span className="text-accent">_</span>
             </span>
             <p className="text-white/40 max-w-xs text-sm font-light leading-relaxed">
-              Bot developer & API engineer. TypeScript, Python, React, Node.js.
+              Mahasiswa Teknik Informatika, bot developer & API engineer. TypeScript, Python, React, Node.js.
             </p>
           </div>
 
