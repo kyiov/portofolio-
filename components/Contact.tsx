@@ -71,7 +71,7 @@ const Contact: React.FC = () => {
         <div className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5 border border-white/5">
            <div className="p-10 md:p-14 bg-[#050505] hover:bg-white/[0.02] transition-colors">
               <span className="text-[11px] uppercase font-black tracking-[0.5em] text-accent mb-6 block">Education</span>
-              <p className="font-jakarta text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-none">INFORMATICS ENG. <br/> <span className="text-white/20 text-lg md:text-xl font-light">UNDERGRADUATE</span></p>
+              <p className="font-jakarta text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-none">INFORMATICS ENG. <br/> <span className="text-white/20 text-lg md:text-xl font-light">ACTIVE STUDENT</span></p>
            </div>
            <div className="p-10 md:p-14 bg-[#050505] hover:bg-white/[0.02] transition-colors">
               <span className="text-[11px] uppercase font-black tracking-[0.5em] text-accent mb-6 block">Presence</span>
