@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { searchMusicTrack, TrackResult, LOCAL_BLACK_BEATLES } from '../services/musicApi';
+import { searchMusicTrack, TrackResult } from '../services/musicApi';
 
 type Track = TrackResult & { query?: string };
 
@@ -27,13 +27,12 @@ const formatTime = (seconds: number): string => {
   return `${minutes}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
 };
 
-function Icon({ name, size = 16 }: { name: 'play' | 'pause' | 'search' | 'close' | 'prev' | 'chevron-left' | 'chevron-right'; size?: number }) {
+function Icon({ name, size = 16 }: { name: 'play' | 'pause' | 'search' | 'close' | 'prev' | 'chevron-right'; size?: number }) {
   const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
   if (name === 'play') return <svg {...common} fill="currentColor" stroke="none"><path d="M7 4.5v15l12-7.5-12-7.5Z" /></svg>;
   if (name === 'pause') return <svg {...common} fill="currentColor" stroke="none"><path d="M6 4h4v16H6zM14 4h4v16h-4z" /></svg>;
   if (name === 'search') return <svg {...common}><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>;
   if (name === 'close') return <svg {...common}><path d="m6 6 12 12M18 6 6 18" /></svg>;
-  if (name === 'chevron-left') return <svg {...common}><path d="m15 18-6-6 6-6" /></svg>;
   if (name === 'chevron-right') return <svg {...common}><path d="m9 18 6-6-6-6" /></svg>;
   return <svg {...common} fill="currentColor" stroke="none"><path d="m19 4.5-10 7.5 10 7.5v-15ZM5 4h2v16H5z" /></svg>;
 }
@@ -105,7 +104,7 @@ const MusicPlayer: React.FC = () => {
     } catch {
       setLoading(false);
       setIsPlaying(false);
-      setError('Stream lagu sudah kedaluwarsa. Memutar Black Beatles sebagai fallback...');
+      setError('Stream lagu sudah kedaluwarsa. Memutar Black Beatles...');
       await playTrack(DEFAULT_TRACK);
     } finally {
       recoveryRef.current = false;
@@ -144,7 +143,7 @@ const MusicPlayer: React.FC = () => {
     audio.addEventListener('error', onError);
     audio.addEventListener('ended', onEnded);
 
-    // Initial hydration from storage or default Black Beatles
+    // Hydration: prefer stored track if valid, otherwise Black Beatles
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -293,69 +292,75 @@ const MusicPlayer: React.FC = () => {
   }, [track, togglePlay, restart]);
 
   return (
-    <div className="fixed right-0 bottom-24 sm:bottom-28 z-50 flex flex-col items-end">
+    <div className="fixed right-0 bottom-24 sm:bottom-28 z-50 flex items-center select-none">
       <p className={srOnlyClass} role="status" aria-live="polite">
         {loading ? 'Memuat audio.' : isPlaying ? `Memutar ${track.title} oleh ${track.artist}` : 'Musik dijeda'}
       </p>
 
-      {/* Expanded Music Player Panel (Slides out from the side) */}
+      {/* Expanded Music Player Panel (Slides out cleanly from right side) */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            initial={{ opacity: 0, x: 80, scale: 0.95 }}
+            initial={{ opacity: 0, x: 100, scale: 0.96 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 80, scale: 0.95 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            exit={{ opacity: 0, x: 100, scale: 0.96 }}
+            transition={{ type: 'spring', damping: 26, stiffness: 320 }}
             id={PLAYER_PANEL_ID}
             aria-label="Detail music player"
             aria-busy={loading}
-            className="mr-2 sm:mr-4 mb-2.5 w-[calc(100vw-1.5rem)] sm:w-80 max-w-xs overflow-hidden rounded-2xl border border-white/10 bg-[#09090b]/95 p-4 shadow-2xl backdrop-blur-2xl"
+            className="mr-3 sm:mr-5 w-[calc(100vw-2rem)] sm:w-80 max-w-xs overflow-hidden rounded-2xl border border-white/10 bg-[#09090b]/95 p-4 shadow-2xl backdrop-blur-2xl"
           >
-            {/* Header: Status and Tuck / Collapse button */}
+            {/* Header: Status and Close/Tuck button */}
             <div className="mb-3 flex items-center justify-between">
-              <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
+              <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-white/40">
                 <span className={`h-1.5 w-1.5 rounded-full ${isPlaying ? 'bg-accent shadow-[0_0_8px_#00f2fe]' : 'bg-white/20'}`} />
                 {isPlaying ? 'Now playing' : 'Paused'}
               </span>
               <button
                 type="button"
                 onClick={() => setIsExpanded(false)}
-                aria-label="Tutup dan masukkan ke samping"
-                title="Sembunyikan ke samping"
-                className="flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] text-white/40 transition hover:bg-white/10 hover:text-white"
+                aria-label="Tutup dan sembunyikan ke samping"
+                className="flex items-center gap-1 rounded-md px-2 py-0.5 font-mono text-[10px] text-white/40 transition hover:bg-white/10 hover:text-white"
               >
                 <span>Tutup</span>
-                <Icon name="chevron-right" size={13} />
+                <Icon name="chevron-right" size={12} />
               </button>
             </div>
 
-            {/* Artwork & Track Information */}
+            {/* Track Info with Spinning Vinyl */}
             <div className="mb-4 flex items-center gap-3">
-              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-white/15 bg-black/50 shadow-xl">
-                <motion.img
-                  src={track.image || DEFAULT_COVER}
-                  alt={`Cover ${track.title}`}
-                  onError={(e) => {
-                    const img = e.currentTarget as HTMLImageElement;
-                    if (img.src !== window.location.origin + DEFAULT_COVER) {
-                      img.src = DEFAULT_COVER;
-                    }
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-white/20 bg-black shadow-lg">
+                {/* Vinyl grooved disc */}
+                <div
+                  className="h-full w-full rounded-full relative overflow-hidden"
+                  style={{
+                    background: 'radial-gradient(circle, #09090b 22%, #1c1c20 23%, #09090b 35%, #1c1c20 36%, #09090b 48%, #1c1c20 49%, #09090b 62%, #1c1c20 63%, #09090b 78%, #1c1c20 79%, #000 100%)',
+                    animation: 'spin 6s linear infinite',
+                    animationPlayState: isPlaying ? 'running' : 'paused',
                   }}
-                  animate={{ rotate: isPlaying ? 360 : 0 }}
-                  transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                  className={`h-full w-full object-cover ${!isPlaying ? 'opacity-70 grayscale' : 'opacity-100'}`}
-                />
-                {/* Vinyl center spindle hole */}
-                <div className="absolute inset-0 m-auto h-3 w-3 rounded-full border border-black/40 bg-[#09090b] shadow-inner" />
+                >
+                  <img
+                    src={track.image || DEFAULT_COVER}
+                    alt={track.title}
+                    onError={(e) => {
+                      const img = e.currentTarget as HTMLImageElement;
+                      if (img.src !== window.location.origin + DEFAULT_COVER) {
+                        img.src = DEFAULT_COVER;
+                      }
+                    }}
+                    className={`absolute inset-0 m-auto h-7 w-7 rounded-full object-cover border border-white/30 ${!isPlaying ? 'opacity-70 grayscale' : 'opacity-100'}`}
+                  />
+                  <div className="absolute inset-0 m-auto h-1.5 w-1.5 rounded-full bg-black border border-white/40" />
+                </div>
               </div>
 
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold text-white tracking-tight">{track.title}</p>
-                <p className="truncate text-[11px] text-white/40">{track.artist}</p>
+                <p className="truncate font-mono text-[11px] text-white/40">{track.artist}</p>
               </div>
             </div>
 
-            {/* Seek bar */}
+            {/* Seek Bar */}
             <div
               className="mb-1 cursor-pointer"
               onClick={seek}
@@ -370,7 +375,7 @@ const MusicPlayer: React.FC = () => {
             >
               <div className="group relative h-1 rounded-full bg-white/10 transition hover:h-1.5">
                 <div
-                  className="absolute inset-y-0 left-0 rounded-full bg-accent shadow-[0_0_8px_rgba(0,242,254,0.6)]"
+                  className="absolute inset-y-0 left-0 rounded-full bg-accent"
                   style={{ width: `${duration ? (progress / duration) * 100 : 0}%` }}
                 />
                 <div
@@ -379,18 +384,17 @@ const MusicPlayer: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="mb-3 flex justify-between text-[10px] tabular-nums text-white/30">
+            <div className="mb-3 flex justify-between font-mono text-[10px] tabular-nums text-white/30">
               <span>{formatTime(progress)}</span>
               <span>{formatTime(duration)}</span>
             </div>
 
-            {/* Action Buttons */}
-            <div className="mb-3 flex items-center justify-center gap-3">
+            {/* Playback Controls */}
+            <div className="mb-2 flex items-center justify-center gap-3">
               <button
                 type="button"
                 onClick={restart}
                 aria-label="Mulai ulang lagu"
-                title="Mulai ulang"
                 className="rounded-full p-2 text-white/40 transition hover:bg-white/10 hover:text-white"
               >
                 <Icon name="prev" size={14} />
@@ -400,7 +404,7 @@ const MusicPlayer: React.FC = () => {
                 onClick={() => void togglePlay()}
                 aria-label={isPlaying ? 'Pause lagu' : 'Putar lagu'}
                 disabled={loading}
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-black shadow-lg shadow-white/10 transition hover:scale-105 hover:bg-accent disabled:opacity-50"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-black shadow-lg transition hover:scale-105 hover:bg-accent disabled:opacity-50"
               >
                 {loading ? (
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" />
@@ -451,23 +455,12 @@ const MusicPlayer: React.FC = () => {
                       {loading ? '...' : 'Play'}
                     </button>
                   </div>
-
-                  {/* Fast shortcut chips */}
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => void playTrack(DEFAULT_TRACK)}
-                      className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[9px] text-white/50 transition hover:border-accent hover:text-accent"
-                    >
-                      ⚡ Black Beatles (Default)
-                    </button>
-                  </div>
                 </motion.form>
               )}
             </AnimatePresence>
 
             {error && (
-              <p role="alert" className="mt-3 border-t border-red-400/10 pt-2 text-[10px] leading-relaxed text-red-300/80">
+              <p role="alert" className="mt-3 border-t border-red-400/10 pt-2 font-mono text-[10px] leading-relaxed text-red-300/80">
                 {error}
               </p>
             )}
@@ -475,74 +468,72 @@ const MusicPlayer: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Docked Side Tab (Flush to the right edge) */}
-      <motion.div
-        layout
-        className="flex items-center rounded-l-full border border-r-0 border-white/15 bg-[#09090b]/90 py-1.5 pl-2.5 pr-3 shadow-[-4px_0_20px_rgba(0,0,0,0.6)] backdrop-blur-xl transition hover:border-accent/40"
-        style={{ boxShadow: isPlaying ? '0 0 20px rgba(0, 242, 254, 0.25)' : undefined }}
+      {/* 
+        SETENGAH PIRINGAN DI TEPI LAYAR (Half-Vinyl Edge Dock)
+        - Hanya setengah piringan yang muncul di tepi kanan layar.
+        - Berputar halus saat play (CSS animation-play-state).
+        - Bersih, minimalis, dan tidak mengganggu konten.
+      */}
+      <div
+        className="relative group cursor-pointer"
+        onClick={() => setIsExpanded((prev) => !prev)}
+        title={`${track.title} - ${track.artist} (Klik untuk membuka)`}
       >
-        {/* Disc + Play/Pause button */}
-        <button
-          type="button"
-          onClick={() => void togglePlay()}
-          aria-label={isPlaying ? 'Pause musik' : 'Putar musik'}
-          aria-busy={loading}
-          className="group relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/20"
-        >
-          <img
-            src={track.image || DEFAULT_COVER}
-            alt={`Cover ${track.title}`}
-            onError={(e) => {
-              const img = e.currentTarget as HTMLImageElement;
-              if (img.src !== window.location.origin + DEFAULT_COVER) {
-                img.src = DEFAULT_COVER;
-              }
+        {/* Half-vinyl container (translated 50% into the screen margin) */}
+        <div className="relative w-20 h-20 sm:w-24 sm:h-24 translate-x-1/2 transition-transform duration-300 ease-out group-hover:translate-x-[40%]">
+          {/* Circular Vinyl Record with grooves and spin animation */}
+          <div
+            className="w-full h-full rounded-full border border-white/20 shadow-[-6px_0_24px_rgba(0,0,0,0.85)] relative overflow-hidden"
+            style={{
+              background: 'radial-gradient(circle, #09090b 22%, #1a1a1f 23%, #09090b 35%, #1a1a1f 36%, #09090b 48%, #1a1a1f 49%, #09090b 62%, #1a1a1f 63%, #09090b 78%, #1a1a1f 79%, #000000 100%)',
+              animation: 'spin 6s linear infinite',
+              animationPlayState: isPlaying ? 'running' : 'paused',
             }}
-            className={`absolute inset-0 h-full w-full object-cover transition ${!isPlaying ? 'grayscale opacity-60' : 'opacity-80'}`}
-          />
-          <span className="relative z-10 text-accent drop-shadow-[0_0_6px_rgba(0,242,254,0.8)]">
-            {loading ? (
-              <span className="block h-4 w-4 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
-            ) : (
-              <Icon name={isPlaying ? 'pause' : 'play'} size={14} />
-            )}
-          </span>
-        </button>
+          >
+            {/* Vinyl light sheen overlay */}
+            <div
+              className="absolute inset-0 rounded-full pointer-events-none"
+              style={{
+                background: 'conic-gradient(from 45deg, transparent 0deg, rgba(255,255,255,0.07) 50deg, transparent 110deg, rgba(255,255,255,0.07) 230deg, transparent 290deg)',
+              }}
+            />
 
-        {/* Track Title and Artist (Click to expand drawer) */}
-        <button
-          type="button"
-          onClick={() => setIsExpanded((value) => !value)}
-          aria-label={isExpanded ? 'Tutup detail music player' : 'Buka detail music player'}
-          className="mx-2 max-w-[110px] sm:max-w-[140px] text-left min-w-0"
-        >
-          <span className="block truncate text-[10px] font-black uppercase tracking-wider text-accent">
-            {track.title}
-          </span>
-          <span className="block truncate font-mono text-[9px] text-white/50">
-            {track.artist}
-          </span>
-        </button>
-
-        {/* Equalizer animation bars when playing */}
-        {isPlaying && (
-          <div className="mr-1.5 flex items-end gap-0.5 h-3">
-            <span className="w-0.5 bg-accent animate-pulse h-3 rounded-full" />
-            <span className="w-0.5 bg-accent animate-ping h-2 rounded-full" />
-            <span className="w-0.5 bg-accent animate-pulse h-2.5 rounded-full" />
+            {/* Center Label (Album Art Cover) */}
+            <div className="absolute inset-0 m-auto w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-white/25 shadow-md">
+              <img
+                src={track.image || DEFAULT_COVER}
+                alt={`Cover ${track.title}`}
+                onError={(e) => {
+                  const img = e.currentTarget as HTMLImageElement;
+                  if (img.src !== window.location.origin + DEFAULT_COVER) {
+                    img.src = DEFAULT_COVER;
+                  }
+                }}
+                className={`w-full h-full object-cover ${!isPlaying ? 'opacity-70 grayscale' : 'opacity-100'}`}
+              />
+              {/* Spindle hole */}
+              <div className="absolute inset-0 m-auto w-2 h-2 rounded-full bg-black border border-white/40 shadow-inner" />
+            </div>
           </div>
-        )}
+        </div>
 
-        {/* Toggle Arrow */}
+        {/* Tactile Mini Play/Pause Trigger Button at the left edge of the half-disc */}
         <button
           type="button"
-          onClick={() => setIsExpanded((value) => !value)}
-          aria-label={isExpanded ? 'Tutup panel' : 'Buka panel'}
-          className="rounded-full p-1 text-white/40 transition hover:bg-white/10 hover:text-white"
+          onClick={(e) => {
+            e.stopPropagation();
+            void togglePlay();
+          }}
+          aria-label={isPlaying ? 'Pause lagu' : 'Putar lagu'}
+          className="absolute left-[-12px] top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-[#09090b] text-white shadow-lg transition-transform hover:scale-110 hover:border-accent hover:text-accent group-hover:left-[-16px]"
         >
-          <Icon name={isExpanded ? 'chevron-right' : 'chevron-left'} size={14} />
+          {loading ? (
+            <span className="h-3 w-3 animate-spin rounded-full border-2 border-accent/40 border-t-accent" />
+          ) : (
+            <Icon name={isPlaying ? 'pause' : 'play'} size={11} />
+          )}
         </button>
-      </motion.div>
+      </div>
     </div>
   );
 };
