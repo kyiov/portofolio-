@@ -57,12 +57,12 @@ const Hero: React.FC = () => {
         animate="visible"
         className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center text-center py-20"
       >
-        <motion.div variants={itemVariants} className="mb-6 flex items-center gap-3 md:gap-4 flex-wrap justify-center">
-          <span className="w-6 md:w-12 h-px bg-accent/50"></span>
-          <span className="text-[9px] md:text-[11px] font-mono font-bold uppercase tracking-[0.35em] text-accent">
-            INFORMATICS ENGINEERING STUDENT
+        <motion.div variants={itemVariants} className="mb-6 flex items-center gap-4">
+          <span className="w-8 md:w-16 h-px bg-accent/50"></span>
+          <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[1em] text-accent">
+            EST. MMXXV
           </span>
-          <span className="w-6 md:w-12 h-px bg-accent/50"></span>
+          <span className="w-8 md:w-16 h-px bg-accent/50"></span>
         </motion.div>
 
         <motion.div style={{ y: yText }} className="relative reveal-text w-full">
