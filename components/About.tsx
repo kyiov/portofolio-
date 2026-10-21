@@ -86,11 +86,11 @@ const About: React.FC = () => {
                 className="border-l-2 border-accent pl-6 lg:pl-8 h-fit"
               >
                 <p className="text-white/80 font-light text-lg md:text-xl leading-relaxed max-w-md">
-                  Saya seorang mahasiswa Teknik Informatika yang mendalami arsitektur backend, REST APIs, dan otomasi bot. Aktif membangun sistem tangguh dan berkinerja tinggi dengan TypeScript, Python, React, dan Node.js.
+                  Informatics Engineering student focused on backend architecture, high-performance REST APIs, and automated bot systems. Passionate about engineering resilient microservices with TypeScript, Python, React, and Node.js.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-2.5">
                   <span className="px-3.5 py-1.5 rounded-full border border-accent/40 text-[9px] font-mono uppercase font-bold text-accent bg-accent/10">
-                    Teknik Informatika
+                    Informatics Engineering
                   </span>
                   <span className="px-3.5 py-1.5 rounded-full border border-white/10 text-[9px] font-mono uppercase text-white/50">
                     Bots

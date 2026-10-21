@@ -137,12 +137,12 @@ const App: React.FC = () => {
               MUH4RHQ<span className="text-accent">_</span>
             </span>
             <p className="text-white/40 max-w-xs text-sm font-light leading-relaxed">
-              Mahasiswa Teknik Informatika, bot developer & API engineer. TypeScript, Python, React, Node.js.
+              Informatics Engineering student, bot developer & API engineer. TypeScript, Python, React, Node.js.
             </p>
           </div>
 
           <div className="flex flex-col gap-4">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-accent">Navigasi</span>
+            <span className="text-[10px] uppercase font-mono tracking-widest text-accent">Navigation</span>
             <nav className="flex flex-col gap-2.5 font-bold uppercase text-xs">
               <a href="#about" className="text-white/60 hover:text-accent transition-colors interactive">About</a>
               <a href="#projects" className="text-white/60 hover:text-accent transition-colors interactive">Projects</a>
@@ -152,7 +152,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-4 md:items-end">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-accent">Terhubung</span>
+            <span className="text-[10px] uppercase font-mono tracking-widest text-accent">Connect</span>
             <div className="flex gap-4">
               <a
                 href="https://github.com/muhar363"

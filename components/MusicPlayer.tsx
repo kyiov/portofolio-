@@ -113,8 +113,8 @@ const MusicPlayer: React.FC = () => {
       <button
         type="button"
         onClick={() => void togglePlay()}
-        aria-label={isPlaying ? 'Jeda musik Black Beatles' : 'Putar musik Black Beatles'}
-        title={isPlaying ? 'Black Beatles (Klik untuk jeda)' : 'Black Beatles (Klik untuk putar)'}
+        aria-label={isPlaying ? 'Pause Black Beatles music' : 'Play Black Beatles music'}
+        title={isPlaying ? 'Black Beatles (Click to pause)' : 'Black Beatles (Click to play)'}
         className="group relative block outline-none cursor-pointer p-0 m-0 bg-transparent border-0 touch-manipulation"
       >
         {/* Ripple Shockwave Effect on Touch / Click */}
