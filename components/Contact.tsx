@@ -79,7 +79,7 @@ const Contact: React.FC = () => {
            </div>
            <div className="p-10 md:p-14 bg-[#050505] hover:bg-white/[0.02] transition-colors">
               <span className="text-[11px] uppercase font-black tracking-[0.5em] text-accent mb-6 block">Experience</span>
-              <p className="font-jakarta text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-none">BUILDING SINCE <br/> <span className="text-white/20 text-lg md:text-xl font-light">EST. MMXXV (2025)</span></p>
+              <p className="font-jakarta text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-none">BUILDING SINCE <br/> <span className="text-white/20 text-lg md:text-xl font-light">2025</span></p>
            </div>
         </div>
       </div>
